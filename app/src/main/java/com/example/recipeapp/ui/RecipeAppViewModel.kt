@@ -42,7 +42,7 @@ class RecipeAppViewModel : ViewModel() {
 
             initializer {
                 LoginViewModel(
-                    recipeApplication().container.acc
+                    recipeApplication().container.accountsRepository
                 )
             }
         }
