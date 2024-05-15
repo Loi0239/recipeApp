@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,14 +18,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.recipeapp.R
+import com.example.recipeapp.ui.favouriteRecipe.FavouriteDestination
+import com.example.recipeapp.ui.home.HomeDestination
 import com.example.recipeapp.ui.navigation.RecipeNavHost
+import com.example.recipeapp.ui.shoppingList.ShoppingListDestination
 
 @Composable
 fun RecipeApp(
@@ -38,15 +44,21 @@ fun RecipeApp(
             recipeAppViewModel = recipeAppViewModel
         )
         if(footerState){
-            Footer(modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter))
+            Footer(
+                navController = navController,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+            )
         }
     }
 }
 
 @Composable
-fun Footer(modifier: Modifier = Modifier){
+fun Footer(
+    navController: NavController,
+    modifier: Modifier = Modifier
+){
     val viewModel: RecipeAppViewModel = viewModel()
     Box(modifier = modifier) {
         Row(modifier = Modifier
@@ -57,14 +69,34 @@ fun Footer(modifier: Modifier = Modifier){
             verticalAlignment = Alignment.CenterVertically
         ) {
             val footerItems = viewModel.footerItems.observeAsState(initial = emptyList()).value
-            footerItems?.forEach { footerItem ->
+            footerItems.forEach { footerItem ->
                 Icon(
                     footerItem.nameIcon,
                     contentDescription = null,
                     modifier = Modifier
-                        .clickable { viewModel.onItemClicked(footerItem.id) }
+                        .clickable {
+                            viewModel.onItemClicked(footerItem.id)
+                            when (footerItem.id) {
+                                1 -> {
+                                    navController.navigate(HomeDestination.route)
+                                }
+
+                                2 -> {
+                                    navController.navigate(FavouriteDestination.route)
+                                }
+
+                                4 -> {
+                                    navController.navigate(ShoppingListDestination.route)
+                                }
+                            }
+                        }
                         .let {
-                            if (footerItem.checked) {
+                            if (footerItem.id == 3) {
+                                it
+                                    .clip(shape = RoundedCornerShape(8.dp))
+                                    .background(color = colorResource(id = R.color.primaryColor))
+                                    .padding(vertical = 4.dp, horizontal = 8.dp)
+                            } else if (footerItem.checked) {
                                 it
                                     .background(color = Color(0xffECECEC))
                                     .padding(8.dp)
@@ -74,7 +106,9 @@ fun Footer(modifier: Modifier = Modifier){
                                     .padding(8.dp)
                             }
                         },
-                    tint = if (footerItem.checked) {
+                    tint = if(footerItem.id == 3){
+                        Color.White
+                    }else if (footerItem.checked) {
                         colorResource(id = R.color.primaryColor)
                     } else {
                         Color.Unspecified

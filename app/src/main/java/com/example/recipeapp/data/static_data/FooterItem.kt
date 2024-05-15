@@ -1,6 +1,7 @@
 package com.example.recipeapp.data.static_data
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -28,7 +29,7 @@ object FooterRepository{
         ),
         FooterItem(
             id = 3,
-            nameIcon = Icons.Default.Person,
+            nameIcon = Icons.Default.Add,
             checked = false
         ),
         FooterItem(
@@ -38,7 +39,7 @@ object FooterRepository{
         ),
         FooterItem(
             id = 5,
-            nameIcon = Icons.Default.Search,
+            nameIcon = Icons.Default.Person,
             checked = false
         )
     )
