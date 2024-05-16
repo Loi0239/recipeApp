@@ -1,5 +1,7 @@
-package com.example.recipeapp.ui.favouriteRecipe
+package com.example.recipeapp.ui.product
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,8 +23,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,73 +55,75 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipeapp.R
 import com.example.recipeapp.data.dynamic_data.favourite.Favourite
+import com.example.recipeapp.data.static_data.Categories
 import com.example.recipeapp.data.static_data.Category
+import com.example.recipeapp.data.static_data.Product
+import com.example.recipeapp.data.static_data.Products
 import com.example.recipeapp.ui.RecipeAppViewModel
 import com.example.recipeapp.ui.navigation.NavigationDestination
 import kotlinx.coroutines.launch
 
-object FavouriteDestination:NavigationDestination{
-    override val route: String = "favourite"
+object AllProductScreenDestination: NavigationDestination {
+    override val route: String = "AllProductScreen"
 }
 
 @Composable
-fun RecipeFavoriteScreen(
-    recipeAppViewModel:RecipeAppViewModel,
-    favouriteRecipeViewModel: FavouriteRecipeViewModel =
-        viewModel(factory = RecipeAppViewModel.Factory),
+fun LayoutAllRecipe(
+    navToAllProductScreen:()->Unit,
     navigateToRecipeDetailScreen:(Int)->Unit,
-){
+    recipeAppViewModel: RecipeAppViewModel,
+    allProductViewModel: AllProductViewModel = viewModel(factory = RecipeAppViewModel.Factory)
+) {
     LaunchedEffect(Unit) {
         recipeAppViewModel.setFooterState(true)
     }
+    val favouriteList by allProductViewModel.favouriteList.observeAsState(emptyList())
+    val categories = remember { Categories().getCategoryList() }
+    // Thêm một mục mới vào danh sách danh mục với tên "Tất cả"
+    val allCategory = Category(-1, "Tất cả")
+    val updatedCategories = listOf(allCategory) + categories
 
-    val listFavourite by favouriteRecipeViewModel.favouriteList.observeAsState(emptyList())
-    val categoryList = favouriteRecipeViewModel.updatedCategories
-
-    var selectedCategory by remember { mutableStateOf(favouriteRecipeViewModel.allCategory) } // Chọn "Tất cả" mặc định
-    var selectedCategoryIndex by remember { mutableIntStateOf(0) } // theo dõi chỉ mục của danh mục đã chọn
+    var selectedCategory by remember { mutableStateOf(allCategory) } // Chọn "Tất cả" mặc định
+    val products = remember { Products().productList }
+    var selectedCategoryIndex by remember { mutableStateOf(0) } // theo dõi chỉ mục của danh mục đã chọn
 
     Column(
-        modifier = Modifier.padding(bottom = 60.dp)
+        modifier = Modifier.padding(15.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 15.dp, top = 15.dp)
-        ) {
-            Text(
-                text = "Danh sách yêu thích",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Spacer(modifier = Modifier.padding(top = 15.dp))
+        Text(
+            text = "Tất cả công thức",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 15.dp)
+        )
+
         CategoryList(
-            categories = categoryList,
+            categories = updatedCategories,
             onCategorySelected = { category ->
                 selectedCategory = category
-                selectedCategoryIndex = categoryList.indexOf(category)
+                selectedCategoryIndex = updatedCategories.indexOf(category)
             },
             selectedCategoryIndex = selectedCategoryIndex
         )
-        Spacer(modifier = Modifier.padding(top = 20.dp))
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Kiểm tra xem danh mục đã chọn có phải là "Tất cả" hay không
-        val filteredProducts = if (selectedCategory == favouriteRecipeViewModel.allCategory) {
-            listFavourite // Hiển thị tất cả
+        val filteredProducts = if (selectedCategory == allCategory) {
+            products // Hiển thị tất cả
         } else {
             selectedCategory.let { category ->
-                listFavourite.filter { favourite ->
-                    val product = favouriteRecipeViewModel.getProduct(favourite.idProduct)
+                products.filter { product ->
                     product.category.contains(category)
                 }
             }
         }
 
         ProductList(
-            favouriteList = filteredProducts,
+            favouriteList = favouriteList,
+            products = filteredProducts,
             navigateToRecipeDetailScreen = navigateToRecipeDetailScreen,
-            favouriteRecipeViewModel = favouriteRecipeViewModel
+            allProductViewModel = allProductViewModel
         )
     }
 }
@@ -159,35 +166,42 @@ fun CategoryItem(
 
 @Composable
 fun ProductList(
-    favouriteList: List<Favourite>,
+    favouriteList:List<Favourite>,
+    products: List<Product>,
     navigateToRecipeDetailScreen:(Int)->Unit,
-    favouriteRecipeViewModel: FavouriteRecipeViewModel
+    allProductViewModel: AllProductViewModel
 ) {
-    LazyColumn {
-        items(favouriteList) { favourite ->
-            CardRecipe(
-                favourite = favourite,
-                navigateToRecipeDetailScreen = navigateToRecipeDetailScreen,
-                favouriteRecipeViewModel = favouriteRecipeViewModel
+    LazyColumn(
+        modifier = Modifier.padding(bottom = 24.dp)
+    ) {
+        items(products) { product ->
+            val check = allProductViewModel.fillFavourite(favouriteList,product.id)
+            ProductItem(
+                checkFavourite = check,
+                product = product,
+                navigateToRecipeDetailScreen,
+                allProductViewModel
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun CardRecipe(
-    favourite: Favourite,
-    navigateToRecipeDetailScreen: (Int) -> Unit,
-    favouriteRecipeViewModel: FavouriteRecipeViewModel
+fun ProductItem(
+    checkFavourite:Boolean,
+    product: Product,
+    navigateToRecipeDetailScreen:(Int)->Unit,
+    allProductViewModel: AllProductViewModel
 ){
+    Log.i("check", "$checkFavourite")
     val coroutineScope = rememberCoroutineScope()
-    val product = favouriteRecipeViewModel.getProduct(favourite.idProduct)
 
     Box(modifier= Modifier
         .fillMaxWidth()
         .padding(start = 35.dp, end = 35.dp)
-        .clickable { navigateToRecipeDetailScreen(favourite.idProduct) }
+        .clickable { navigateToRecipeDetailScreen(product.id) }
     ){
         Box {
             Image(
@@ -207,7 +221,7 @@ fun CardRecipe(
                     .background(Color.Black.copy(alpha = 0.2f))
             )
         }
-        
+
         Row(
             modifier = Modifier
                 .padding(end = 25.dp, top = 20.dp)
@@ -242,8 +256,19 @@ fun CardRecipe(
         Button(
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                coroutineScope.launch {
-                    favouriteRecipeViewModel.deleteFavourite(favourite.id, favourite.idProduct)
+                if (checkFavourite) {
+                    coroutineScope.launch {
+                        allProductViewModel.deleteFavourite(
+                            allProductViewModel.getIdFavourite(product.id),
+                            product.id
+                        )
+                    }
+
+                } else {
+                    coroutineScope.launch {
+                        allProductViewModel.addFavourite(product.id)
+                    }
+
                 }
             },
             colors = ButtonDefaults.buttonColors(
@@ -259,7 +284,11 @@ fun CardRecipe(
                 Icons.Default.Favorite,
                 contentDescription = null,
                 Modifier.size(30.dp),
-                tint = colorResource(id = R.color.primaryColor)
+                tint = if(checkFavourite){
+                    colorResource(id = R.color.primaryColor)
+                }else{
+                    Color.White
+                }
             )
         }
         Column(modifier = Modifier

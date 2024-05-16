@@ -10,13 +10,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.recipeapp.RecipeApplication
 import com.example.recipeapp.data.static_data.FooterItem
 import com.example.recipeapp.data.static_data.FooterRepository
+import com.example.recipeapp.ui.favouriteRecipe.FavouriteRecipeViewModel
+import com.example.recipeapp.ui.home.HomeViewModel
 import com.example.recipeapp.ui.login.LoginViewModel
+import com.example.recipeapp.ui.product.AllProductViewModel
+import com.example.recipeapp.ui.recipe.RecipeViewModel
+import com.example.recipeapp.ui.shoppingList.ShoppingListViewModel
 
 class RecipeAppViewModel : ViewModel() {
     var idUiState by mutableStateOf(IdUiState())
@@ -43,6 +49,36 @@ class RecipeAppViewModel : ViewModel() {
             initializer {
                 LoginViewModel(
                     recipeApplication().container.accountsRepository
+                )
+            }
+
+            initializer {
+                HomeViewModel()
+            }
+
+            initializer {
+                FavouriteRecipeViewModel(
+                    recipeApplication().container.favouriteRepository
+                )
+            }
+
+            initializer {
+                AllProductViewModel(
+                    recipeApplication().container.favouriteRepository
+                )
+            }
+
+            initializer {
+                RecipeViewModel(
+                    this.createSavedStateHandle(),
+                    recipeApplication().container.favouriteRepository,
+                    recipeApplication().container.shoppingRepository
+                )
+            }
+
+            initializer {
+                ShoppingListViewModel(
+                    recipeApplication().container.shoppingRepository
                 )
             }
         }
