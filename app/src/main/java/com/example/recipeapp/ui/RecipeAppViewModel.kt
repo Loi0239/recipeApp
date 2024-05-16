@@ -21,7 +21,12 @@ import com.example.recipeapp.ui.favouriteRecipe.FavouriteRecipeViewModel
 import com.example.recipeapp.ui.home.HomeViewModel
 import com.example.recipeapp.ui.login.LoginViewModel
 import com.example.recipeapp.ui.product.AllProductViewModel
+import com.example.recipeapp.ui.product.category_product.CateProViewModel
+import com.example.recipeapp.ui.product.find_name_product.FindNameViewModel
 import com.example.recipeapp.ui.recipe.RecipeViewModel
+import com.example.recipeapp.ui.recipe_person.ShowRecipeViewModel
+import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipeViewModel
+import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipeViewModel
 import com.example.recipeapp.ui.shoppingList.ShoppingListViewModel
 
 class RecipeAppViewModel : ViewModel() {
@@ -81,6 +86,48 @@ class RecipeAppViewModel : ViewModel() {
                     recipeApplication().container.shoppingRepository
                 )
             }
+
+            initializer {
+                ShowRecipeViewModel(
+                    recipeApplication().container.recipePersonRepository
+                )
+            }
+
+            initializer {
+                AddRecipeViewModel(
+                    recipeApplication().container.recipePersonRepository,
+                    recipeApplication().container.ingredientRepository
+                )
+            }
+
+            initializer {
+                UpdateRecipeViewModel(
+                    recipeApplication().container.recipePersonRepository,
+                    recipeApplication().container.ingredientRepository,
+                    this.createSavedStateHandle()
+                )
+            }
+
+            initializer {
+                RecipeViewModel(
+                    this.createSavedStateHandle(),
+                    recipeApplication().container.favouriteRepository,
+                    recipeApplication().container.shoppingRepository
+                )
+            }
+
+            initializer {
+                CateProViewModel(
+                    this.createSavedStateHandle()
+                )
+            }
+
+            initializer {
+                FindNameViewModel(
+                    this.createSavedStateHandle()
+                )
+            }
+
         }
     }
 

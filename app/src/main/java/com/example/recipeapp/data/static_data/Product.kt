@@ -170,4 +170,11 @@ class Products{
     fun getIngredient(idProduct:Int):List<Ingredient>{
         return productList[idProduct].ingredient
     }
+
+    public fun getProductsByCategoryId(categoryId: Int): List<Product> {
+        return productList.filter { product ->
+            product.category.any { it.id == categoryId }
+        }
+    }
+
 }

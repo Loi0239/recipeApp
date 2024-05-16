@@ -9,6 +9,10 @@ import com.example.recipeapp.data.dynamic_data.account.Account
 import com.example.recipeapp.data.dynamic_data.account.AccountDao
 import com.example.recipeapp.data.dynamic_data.favourite.Favourite
 import com.example.recipeapp.data.dynamic_data.favourite.FavouriteDao
+import com.example.recipeapp.data.dynamic_data.ingredient.Ingredient
+import com.example.recipeapp.data.dynamic_data.ingredient.IngredientDao
+import com.example.recipeapp.data.dynamic_data.recipe_person.RecipePerson
+import com.example.recipeapp.data.dynamic_data.recipe_person.RecipePersonDao
 import com.example.recipeapp.data.dynamic_data.shopping.Shopping
 import com.example.recipeapp.data.dynamic_data.shopping.ShoppingDao
 
@@ -17,12 +21,16 @@ import com.example.recipeapp.data.dynamic_data.shopping.ShoppingDao
         Account::class,
         Favourite::class,
         Shopping::class,
+        RecipePerson::class,
+        Ingredient::class
     ], version = 3,
     exportSchema = true)
 abstract class RecipeDatabase: RoomDatabase() {
     abstract fun accountDao(): AccountDao
     abstract fun favouriteDao(): FavouriteDao
     abstract fun shoppingDao(): ShoppingDao
+    abstract fun recipePersonDao(): RecipePersonDao
+    abstract fun ingredientDao(): IngredientDao
 
 
     companion object{
