@@ -23,11 +23,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -69,7 +66,6 @@ object AllProductScreenDestination: NavigationDestination {
 
 @Composable
 fun LayoutAllRecipe(
-    navigateBack:()->Unit,
     navigateToRecipeDetailScreen:(Int)->Unit,
     recipeAppViewModel: RecipeAppViewModel,
     allProductViewModel: AllProductViewModel = viewModel(factory = RecipeAppViewModel.Factory)
@@ -85,7 +81,7 @@ fun LayoutAllRecipe(
 
     var selectedCategory by remember { mutableStateOf(allCategory) } // Chọn "Tất cả" mặc định
     val products = remember { Products().productList }
-    var selectedCategoryIndex by remember { mutableStateOf(0) } // theo dõi chỉ mục của danh mục đã chọn
+    var selectedCategoryIndex by remember { mutableIntStateOf(0) } // theo dõi chỉ mục của danh mục đã chọn
 
     Column(
         modifier = Modifier.padding(15.dp)

@@ -45,7 +45,7 @@ class Products{
                 ),
             ),
             category = listOf(
-                Categories().listCategory[0]
+                Categories().listCategory[1]
             )
         ),
         Product(
@@ -177,4 +177,11 @@ class Products{
         }
     }
 
+    fun getRandomProducts(count: Int = 2): List<Product> {
+        return productList.shuffled().take(count)
+    }
+
+    fun getLastFiveProducts(): List<Product> {
+        return productList.takeLast(5)
+    }
 }

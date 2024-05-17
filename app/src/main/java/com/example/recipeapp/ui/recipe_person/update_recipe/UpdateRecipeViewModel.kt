@@ -3,7 +3,6 @@ package com.example.recipeapp.ui.recipe_person.update_recipe
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,8 +12,6 @@ import com.example.recipeapp.data.dynamic_data.recipe_person.RecipePerson
 import com.example.recipeapp.data.dynamic_data.recipe_person.RecipePersonRepository
 import com.example.recipeapp.ui.recipe_person.add_recipe.UiState
 import com.example.recipeapp.ui.recipe_person.add_recipe.UiStateRecipe
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class UpdateRecipeViewModel(
@@ -24,8 +21,10 @@ class UpdateRecipeViewModel(
 ): ViewModel() {
     var uiState by mutableStateOf(UiState())
         private set
+
     var recipePerson by mutableStateOf<RecipePerson?>(null)
         private set
+
     var ingredient by mutableStateOf<List<Ingredient>>(emptyList())
         private set
 
@@ -38,6 +37,7 @@ class UpdateRecipeViewModel(
             }
         }
     }
+
     init {
         viewModelScope.launch {
             ingredientRepository.getItemIngredient(idRecipe).collect {
@@ -51,13 +51,15 @@ class UpdateRecipeViewModel(
             recipePersonRepository.updateRecipePerson(updatedRecipe)
         }
     }
+
     suspend fun updateIngredients(updatedIngredients: List<Ingredient>) {
-        // Gọi phương thức cập nhật của repository để lưu trữ các thay đổi vào cơ sở dữ liệu
         ingredientRepository.updateIngredients(updatedIngredients)
     }
+
     fun updateUiState(uiStateRecipe: UiStateRecipe){
         uiState = UiState(uiStateRecipe = uiStateRecipe)
     }
+
     fun updateIngredientName(index: Int, newName: String) {
         val currentIngredients = ingredient.toMutableList()
         if (index in currentIngredients.indices) {
@@ -66,6 +68,7 @@ class UpdateRecipeViewModel(
             ingredient = currentIngredients
         }
     }
+
     fun updateIngredientWeight(index: Int, newWeight: String) {
         val currentIngredients = ingredient.toMutableList()
         if (index in currentIngredients.indices) {

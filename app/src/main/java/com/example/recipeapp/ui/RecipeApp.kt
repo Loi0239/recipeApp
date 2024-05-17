@@ -11,11 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +26,8 @@ import com.example.recipeapp.R
 import com.example.recipeapp.ui.favouriteRecipe.FavouriteDestination
 import com.example.recipeapp.ui.home.HomeDestination
 import com.example.recipeapp.ui.navigation.RecipeNavHost
+import com.example.recipeapp.ui.recipe_person.ShowRecipeDestination
+import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipeDestination
 import com.example.recipeapp.ui.shoppingList.ShoppingListDestination
 
 @Composable
@@ -85,8 +83,16 @@ fun Footer(
                                     navController.navigate(FavouriteDestination.route)
                                 }
 
+                                3 -> {
+                                    navController.navigate(AddRecipeDestination.route)
+                                }
+
                                 4 -> {
                                     navController.navigate(ShoppingListDestination.route)
+                                }
+
+                                5 -> {
+                                    navController.navigate(ShowRecipeDestination.route)
                                 }
                             }
                         }

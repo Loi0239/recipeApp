@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,14 +14,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,33 +31,75 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipeapp.data.static_data.Product
 import com.example.recipeapp.data.static_data.Products
 import com.example.recipeapp.ui.RecipeAppViewModel
 import com.example.recipeapp.ui.navigation.NavigationDestination
-import com.example.recipeapp.ui.recipe.RecipeViewModel
 
 object FindNameProScreenDestination: NavigationDestination {
     override val route: String = "FindNameProScreen"
     const val keyproductName = "proname"
-    val routeWithProductName = "${FindNameProScreenDestination.route}/{$keyproductName}"
+    val routeWithProductName = "${route}/{$keyproductName}"
 }
 
 @Composable
 fun FindNameProScreen(
-    navToFindNamePro:()->Unit,
+    recipeAppViewModel: RecipeAppViewModel,
     navigateBack:()->Unit,
     navigateToRecipeDetailScreen:(Int)->Unit,
-    findNameViewModel: FindNameViewModel = viewModel(factory = RecipeAppViewModel.Factory),
+    findNameViewModel: FindNameViewModel = viewModel(factory = RecipeAppViewModel.Factory)
 ){
     val keyProductName = findNameViewModel.keyproName
-    Text(text = keyProductName)
     val productList = Products().productList
     val filteredProductList = productList.filter { it.name.contains(keyProductName, ignoreCase = true) }
 
+    LaunchedEffect(Unit) {
+        recipeAppViewModel.setFooterState(false)
+    }
+
     LazyColumn {
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = { navigateBack() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent
+                    )
+
+                ) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = "back",
+                        modifier = Modifier.size(30.dp),
+                        Color(0xff74777a)
+                    )
+                }
+                Spacer(modifier = Modifier.padding(start = 20.dp))
+                Text(
+                    text = "Tìm kiếm công thức",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+        }
+        item { 
+            Row(modifier = Modifier.padding(start = 20.dp)) {
+                Text(
+                    text = "Kết quả tìm kiếm: $keyProductName",
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+        }
         items(filteredProductList) { product ->
             ProductItem(product = product, navigateToRecipeDetailScreen)
         }
@@ -96,11 +141,12 @@ fun ProductItem(
                 fontWeight = FontWeight(weight = 1000),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.size(height = 50.dp, width = 220.dp))
-            Text(text = "(by Alex)",
+            Text(text = product.category[0].name,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .alpha(0.3f))
         }
     }
+    Spacer(modifier = Modifier.padding(top = 20.dp))
 }

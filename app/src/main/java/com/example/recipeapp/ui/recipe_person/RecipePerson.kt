@@ -1,5 +1,6 @@
 package com.example.recipeapp.ui.recipe_person
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,31 +11,32 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -52,12 +54,13 @@ object ShowRecipeDestination: NavigationDestination {
 @Composable
 fun RecipePerson(
     viewModel: ShowRecipeViewModel = viewModel(factory = RecipeAppViewModel.Factory),
-    navigateBack:()->Unit,
-    navToShowRecipe:()->Unit,
     navigateToUpdateRecipe:(Int)->Unit,
 ){
     val coroutineScope = rememberCoroutineScope()
     val homeUiState by viewModel.showDataState.collectAsState()
+    val countRecipe by viewModel.countRecipeState.collectAsState()
+    val countFavour by viewModel.countFavourState.collectAsState()
+
 
     LazyColumn{
         item {
@@ -106,7 +109,7 @@ fun RecipePerson(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "4",
+                            text = "$countRecipe",
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -123,7 +126,7 @@ fun RecipePerson(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "14",
+                            text = "$countFavour",
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -249,16 +252,48 @@ private fun RecipeItem(
                 ) {
                     Icon(Icons.Default.Create, contentDescription = "Fix")
                 }
-                Button(
-                    onClick = { onDeleteClicked(item) },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Icon(Icons.Default.Delete, contentDescription = "Del")
-                }
+                DialogButtonDeleteRecipe(item = item, onDeleteClicked = onDeleteClicked)
             }
         }
+    }
+}
+
+@Composable
+fun DialogButtonDeleteRecipe(
+    item: RecipePerson,
+    onDeleteClicked: (RecipePerson) -> Unit,
+) {
+    val openDialog = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    Button(
+        onClick = { openDialog.value = true },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Black
+        )
+    ) {
+        Icon(Icons.Default.Delete, contentDescription = "Del")
+    }
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = { openDialog.value = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDeleteClicked(item)
+                    openDialog.value = false
+                    Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show()
+                }) {
+                    Text("Xác nhận")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { openDialog.value = false }) {
+                    Text("Hủy")
+                }
+            },
+            title = { Text(text = "Xóa công thức") },
+            text = { Text(text = "Bạn có muốn xóa không ?") }
+        )
     }
 }

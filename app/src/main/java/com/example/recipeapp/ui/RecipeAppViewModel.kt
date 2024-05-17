@@ -8,7 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -19,7 +18,6 @@ import com.example.recipeapp.data.static_data.FooterItem
 import com.example.recipeapp.data.static_data.FooterRepository
 import com.example.recipeapp.ui.favouriteRecipe.FavouriteRecipeViewModel
 import com.example.recipeapp.ui.home.HomeViewModel
-import com.example.recipeapp.ui.login.LoginViewModel
 import com.example.recipeapp.ui.product.AllProductViewModel
 import com.example.recipeapp.ui.product.category_product.CateProViewModel
 import com.example.recipeapp.ui.product.find_name_product.FindNameViewModel
@@ -49,12 +47,6 @@ class RecipeAppViewModel : ViewModel() {
         val Factory = viewModelFactory {
             initializer {
                 RecipeAppViewModel()
-            }
-
-            initializer {
-                LoginViewModel(
-                    recipeApplication().container.accountsRepository
-                )
             }
 
             initializer {
@@ -89,7 +81,8 @@ class RecipeAppViewModel : ViewModel() {
 
             initializer {
                 ShowRecipeViewModel(
-                    recipeApplication().container.recipePersonRepository
+                    recipeApplication().container.recipePersonRepository,
+                    recipeApplication().container.favouriteRepository
                 )
             }
 

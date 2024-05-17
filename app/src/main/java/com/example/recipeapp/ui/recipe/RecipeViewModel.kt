@@ -11,10 +11,7 @@ import com.example.recipeapp.data.dynamic_data.favourite.Favourite
 import com.example.recipeapp.data.dynamic_data.favourite.FavouriteRepository
 import com.example.recipeapp.data.dynamic_data.shopping.Shopping
 import com.example.recipeapp.data.dynamic_data.shopping.ShoppingRepository
-import com.example.recipeapp.data.static_data.Product
-import com.example.recipeapp.data.static_data.Products
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class RecipeViewModel(
     savedStateHandle: SavedStateHandle,

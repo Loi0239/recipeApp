@@ -1,8 +1,6 @@
 package com.example.recipeapp.data
 
 import android.content.Context
-import com.example.recipeapp.data.dynamic_data.account.AccountRepository
-import com.example.recipeapp.data.dynamic_data.account.OfflineAccountRepository
 import com.example.recipeapp.data.dynamic_data.favourite.FavouriteRepository
 import com.example.recipeapp.data.dynamic_data.favourite.OfflineFavouriteRepository
 import com.example.recipeapp.data.dynamic_data.ingredient.IngredientRepository
@@ -13,7 +11,6 @@ import com.example.recipeapp.data.dynamic_data.shopping.OfflineShoppingRepositor
 import com.example.recipeapp.data.dynamic_data.shopping.ShoppingRepository
 
 interface AppContainer{
-    val accountsRepository: AccountRepository
     val favouriteRepository: FavouriteRepository
     val shoppingRepository: ShoppingRepository
     val recipePersonRepository: RecipePersonRepository
@@ -21,9 +18,6 @@ interface AppContainer{
 }
 
 class AppDataContainer(private val context: Context): AppContainer{
-    override val accountsRepository: AccountRepository by lazy {
-        OfflineAccountRepository(RecipeDatabase.getDatabase(context).accountDao())
-    }
     override val favouriteRepository: FavouriteRepository by lazy {
         OfflineFavouriteRepository(RecipeDatabase.getDatabase(context).favouriteDao())
     }

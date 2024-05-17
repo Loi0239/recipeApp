@@ -5,13 +5,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -20,7 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -35,7 +37,6 @@ import com.example.recipeapp.data.static_data.Product
 import com.example.recipeapp.data.static_data.Products
 import com.example.recipeapp.ui.RecipeAppViewModel
 import com.example.recipeapp.ui.navigation.NavigationDestination
-import com.example.recipeapp.ui.recipe.RecipeViewModel
 
 object CategoryProductScreenDestination: NavigationDestination {
     override val route: String = "Category Product Screen"
@@ -44,29 +45,52 @@ object CategoryProductScreenDestination: NavigationDestination {
 }
 @Composable
 fun CategoryProductScreen(
+    recipeAppViewModel: RecipeAppViewModel,
     recipeViewModel: CateProViewModel = viewModel(factory = RecipeAppViewModel.Factory),
     navigateBack:()->Unit,
-    navToCategoryProduct:()->Unit,
-    navigateToRecipeDetailScreen:(Int)->Unit,
+    navigateToRecipeDetailScreen:(Int)->Unit
 ){
     val cateId = recipeViewModel.cateId
-    Text(text = "$cateId")
     val products: List<Product> = Products().getProductsByCategoryId(cateId)
-    val productListString = buildString {
-        for (product in products) {
-            append("${product.name}, ")
-        }
+
+    LaunchedEffect(Unit) {
+        recipeAppViewModel.setFooterState(false)
     }
 
-    Text(text = productListString)
-    ProductList(products = products, navigateToRecipeDetailScreen)
+    LazyColumn{
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = { navigateBack() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent
+                    )
+
+                ) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = "back",
+                        modifier = Modifier.size(30.dp),
+                        Color(0xff74777a)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.padding(top = 20.dp))
+        }
+        item {
+            ProductList(products = products, navigateToRecipeDetailScreen)
+        }
+    }
 
 }
 
 @Composable
-fun ProductList(products: List<Product>, navigateToRecipeDetailScreen:(Int)->Unit,) {
-    LazyColumn {
-        items(products) { product ->
+fun ProductList(products: List<Product>, navigateToRecipeDetailScreen:(Int)->Unit) {
+    Column {
+        products.forEach { product ->
             ProductItem(product = product, navigateToRecipeDetailScreen)
         }
     }
@@ -118,11 +142,12 @@ fun ProductItem(product: Product, navigateToRecipeDetailScreen:(Int)->Unit,){
                 fontWeight = FontWeight(weight = 1000),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.size(height = 50.dp, width = 220.dp))
-            Text(text = "(by Alex)",
+            Text(text = product.category[0].name,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .alpha(0.3f))
         }
     }
+    Spacer(modifier = Modifier.padding(top = 20.dp))
 }

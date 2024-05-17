@@ -2,7 +2,6 @@ package com.example.recipeapp.ui.product
 
 import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
@@ -11,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.data.dynamic_data.favourite.Favourite
 import com.example.recipeapp.data.dynamic_data.favourite.FavouriteRepository
-import com.example.recipeapp.data.static_data.Product
 import kotlinx.coroutines.launch
 
 class AllProductViewModel (private val favouriteRepository: FavouriteRepository): ViewModel(){

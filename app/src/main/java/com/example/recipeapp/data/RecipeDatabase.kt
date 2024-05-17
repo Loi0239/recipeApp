@@ -4,9 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.example.recipeapp.data.dynamic_data.account.Account
-import com.example.recipeapp.data.dynamic_data.account.AccountDao
 import com.example.recipeapp.data.dynamic_data.favourite.Favourite
 import com.example.recipeapp.data.dynamic_data.favourite.FavouriteDao
 import com.example.recipeapp.data.dynamic_data.ingredient.Ingredient
@@ -18,7 +15,6 @@ import com.example.recipeapp.data.dynamic_data.shopping.ShoppingDao
 
 @Database(
     entities = [
-        Account::class,
         Favourite::class,
         Shopping::class,
         RecipePerson::class,
@@ -26,7 +22,6 @@ import com.example.recipeapp.data.dynamic_data.shopping.ShoppingDao
     ], version = 3,
     exportSchema = true)
 abstract class RecipeDatabase: RoomDatabase() {
-    abstract fun accountDao(): AccountDao
     abstract fun favouriteDao(): FavouriteDao
     abstract fun shoppingDao(): ShoppingDao
     abstract fun recipePersonDao(): RecipePersonDao

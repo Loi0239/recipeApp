@@ -29,43 +29,19 @@ class AddRecipeViewModel(
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = showDataState()
             )
-
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }
-
-//    fun updateUiState(uiStateRecipe: UiStateRecipe, uiNguyenLieu: UINguyenLieu){
-//        uiState =
-//            UiState(
-//                uiStateRecipe = uiStateRecipe,
-//                uiNguyenLieu = uiNguyenLieu
-//            )
-//    }
     fun updateUiState(uiStateRecipe: UiStateRecipe) {
         uiState = uiState.copy(uiStateRecipe = uiStateRecipe)
     }
-//    suspend fun addNguyenLieu(id: Int){
-//        viewModelScope.launch {
-//            ingredientRepository.insertIngredient(uiState.uiNguyenLieu.addNguyenLieu(id))
-//        }
-//    }
     fun addIngredient(nameIngre: String, weightIngre: String) {
-//        val ingredients = uiState.ingredients.toMutableList()
-//        ingredients.add(UINguyenLieu(nameIngre = nameIngre, weightIngre = weightIngre))
-//        uiState = uiState.copy(ingredients = ingredients)
-    val newIngredient = UINguyenLieu(nameIngre = nameIngre, weightIngre = weightIngre)
-    val updatedIngredients = uiState.ingredients.toMutableList().apply {
-        add(newIngredient)
+        val newIngredient = UINguyenLieu(nameIngre = nameIngre, weightIngre = weightIngre)
+        val updatedIngredients = uiState.ingredients.toMutableList().apply {
+            add(newIngredient)
+        }
+        uiState = uiState.copy(ingredients = updatedIngredients)
     }
-    uiState = uiState.copy(ingredients = updatedIngredients)
-    }
-//    fun addRecipe() {
-//        viewModelScope.launch {
-//            recipePersonRepository.insertRecipePerson(uiState.uiStateRecipe.addRecipe())
-//            val id = recipePersonRepository.getLastInsertId()
-//            addNguyenLieu(id)
-//        }
-//    }
     fun addRecipe() {
         viewModelScope.launch {
             recipePersonRepository.insertRecipePerson(uiState.uiStateRecipe.addRecipe())
@@ -80,7 +56,6 @@ data class showDataState(val itemList: List<RecipePerson> = listOf())
 
 data class UiState(
     val uiStateRecipe: UiStateRecipe = UiStateRecipe(),
-//    val uiNguyenLieu : UINguyenLieu = UINguyenLieu()
     val ingredients: List<UINguyenLieu> = listOf()
 )
 

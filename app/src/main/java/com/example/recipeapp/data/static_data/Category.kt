@@ -16,19 +16,18 @@ class Categories{
             name = "Món ăn chay"
         ),
         Category(
-            id = 1,
+            id = 2,
             name = "Món xào"
         ),
         Category(
-            id = 2,
+            id = 3,
             name = "Món chiên"
         ),
         Category(
-            id = 2,
+            id = 4,
             name = "Món luộc"
         ),
     )
-
     public fun getCategoryList(): MutableList<Category> {
         return listCategory
     }

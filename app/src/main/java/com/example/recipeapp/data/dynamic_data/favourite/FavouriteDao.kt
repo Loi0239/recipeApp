@@ -22,4 +22,7 @@ interface FavouriteDao {
 
     @Query("select * from yeuthich order by I_id_yeu_thich desc")
     fun selectFavourite(): Flow<List<Favourite>>
+
+    @Query("SELECT COUNT(*) AS SoLuong FROM yeuthich")
+    suspend fun getCountFavourite():Int
 }

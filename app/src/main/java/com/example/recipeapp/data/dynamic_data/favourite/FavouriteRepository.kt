@@ -12,4 +12,6 @@ interface FavouriteRepository {
     suspend fun getIdFavourite(idProduct: Int):Int
 
     fun selectFavourite():Flow<List<Favourite>>
+
+    suspend fun getCountFavourite(): Int
 }

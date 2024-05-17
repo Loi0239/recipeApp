@@ -1,17 +1,20 @@
 package com.example.recipeapp.ui.home
 
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -23,35 +26,26 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipeapp.R
 import com.example.recipeapp.data.static_data.Categories
 import com.example.recipeapp.data.static_data.Category
@@ -69,47 +63,35 @@ fun HomeScreen(
     navigateToCategoryProductScreen:(Int)->Unit,
     navigateToRecipeDetailScreen:(Int)->Unit,
     navigateToFindNameProScreen:(String)->Unit,
-    navigateToAddRecipe:()->Unit,
-    navigateToShowRecipe:()->Unit,
 ) {
     LaunchedEffect(Unit) {
         recipeAppViewModel.setFooterState(true)
     }
 
     val categories = remember { Categories().getCategoryList() }
-
     val products = remember { Products().productList }
     val textFieldValue = remember { mutableStateOf(TextFieldValue()) }
     val filteredProducts = remember { mutableStateOf(emptyList<Product>()) }
-
     val isSearchPerformed = remember { mutableStateOf(false) }
 
-
     Box {
-        Row {
-            Button(onClick = { navigateToAddRecipe() }) {
-                Text(text = "Add")
-            }
-            Button(onClick = { navigateToShowRecipe() }) {
-                Text(text = "Show")
-            }
-        }
         LazyColumn(
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 30.dp, bottom = 80.dp)
+                .padding(start = 20.dp, end = 20.dp, bottom = 70.dp)
                 .fillMaxWidth()
         ) {
             item {
-                Text(text = "Hello,", style = MaterialTheme.typography.displayLarge)
-                Text(text = "Abhishek.", style = MaterialTheme.typography.displayLarge)
+                Spacer(modifier = Modifier.padding(top = 30.dp))
+                Text(text = "Xin chào,", style = MaterialTheme.typography.displayLarge)
+                Text(text = "Người dùng.", style = MaterialTheme.typography.displayLarge)
                 Text(
-                    text = "What do you want to eat?",
+                    text = "Hãy chọn công thức phù hợp cho bữa ăn của gia đình bạn nào !!",
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.Normal
                 )
             }
             item {
-                Spacer(modifier = Modifier.height(36.dp))
+                Spacer(modifier = Modifier.height(20.dp))
                 OutlinedTextField(
                     value = textFieldValue.value,
                     onValueChange = {
@@ -123,45 +105,45 @@ fun HomeScreen(
                         }
                     },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    placeholder = { Text(text = "Search") },
+                    placeholder = { Text(text = "Tìm kiếm") },
                     modifier = Modifier
-                        .padding(start = 20.dp, end = 20.dp, top = 30.dp)
+                        .padding(start = 20.dp, end = 20.dp)
                         .fillMaxWidth()
-                        .background(Color(0xffE1E1E1), RoundedCornerShape(16.dp))
-                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color(0xFFF0F0F0), RoundedCornerShape(16.dp))
                         .clickable { navigateToFindNameProScreen(textFieldValue.value.text) },
+                    shape = RoundedCornerShape(20.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Search // Thiết lập hành động IME thành Search
+                        imeAction = ImeAction.Search
                     ),
                     keyboardActions = KeyboardActions(onSearch = {
-                        isSearchPerformed.value = true // Thiết lập trạng thái tìm kiếm khi người dùng nhấn nút tìm kiếm trên bàn phím
+                        isSearchPerformed.value = true
                     })
                 )
 
                 if (textFieldValue.value.text.isNotEmpty() && isSearchPerformed.value) {
                     navigateToFindNameProScreen(textFieldValue.value.text)
                 }
-                if (textFieldValue.value.text.isNotEmpty()) {
-                    ProductList(products = filteredProducts.value, navigateToRecipeDetailScreen)
+                Row(
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+                ) {
+                    if (textFieldValue.value.text.isNotEmpty()) {
+                        ProductListFind(products = filteredProducts.value, navigateToRecipeDetailScreen)
+                    }
                 }
             }
             item {
-                Spacer(modifier = Modifier.height(36.dp))
-                CategoryList(categories = categories, navigateToCategoryProductScreen)
-            }
-            item {
-                Spacer(modifier = Modifier.padding(top = 28.dp))
+                Spacer(modifier = Modifier.padding(top = 20.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Today’s special",
+                        text = "Danh mục",
                         style = MaterialTheme.typography.displaySmall,
-                        fontSize = 27.sp
+                        fontSize = 22.sp
                     )
                     Text(
-                        text = "See all",
+                        text = "Xem tất cả",
                         style = MaterialTheme.typography.headlineLarge,
                         color = colorResource(id = R.color.primaryColor),
                         modifier = Modifier
@@ -171,12 +153,78 @@ fun HomeScreen(
                 }
             }
             item {
-                Demo_ExposedDropdownMenuBox()
+                Spacer(modifier = Modifier.padding(top = 5.dp))
+                CategoryList(categories = categories, navigateToCategoryProductScreen)
+            }
+            item {
+                Spacer(modifier = Modifier.padding(top = 28.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Công thức hôm nay",
+                        style = MaterialTheme.typography.displaySmall,
+                        fontSize = 22.sp
+                    )
+                    Text(
+                        text = "Xem tất cả",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = colorResource(id = R.color.primaryColor),
+                        modifier = Modifier
+                            .padding(top = 7.dp)
+                            .clickable { navigateToAllProductScreen() }
+                    )
+                }
+            }
+            item {
+                val productsRepository = Products()
+                val randomProducts = productsRepository.getRandomProducts(5)
+                Spacer(modifier = Modifier.padding(top = 20.dp))
+                LazyRow{
+                    item {
+                        ProductListRanDom(
+                            products = randomProducts,
+                            navigateToRecipeDetailScreen = navigateToRecipeDetailScreen
+                        )
+                    }
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.padding(top = 20.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Công thức mới nhất",
+                        style = MaterialTheme.typography.displaySmall,
+                        fontSize = 22.sp
+                    )
+                    Text(
+                        text = "Xem tất cả",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = colorResource(id = R.color.primaryColor),
+                        modifier = Modifier
+                            .padding(top = 7.dp)
+                            .clickable { navigateToAllProductScreen() }
+                    )
+                }
+            }
+            item {
+                val productsRepository = Products()
+                val lastFiveProducts = productsRepository.getLastFiveProducts()
+                Spacer(modifier = Modifier.padding(top = 20.dp))
+                ProductListNew(
+                    products = lastFiveProducts,
+                    navigateToRecipeDetailScreen = navigateToRecipeDetailScreen
+                )
             }
         }
     }
 }
 
+// Hiển thị danh mục
 @Composable
 fun CategoryList(
     categories: List<Category>,
@@ -207,66 +255,176 @@ fun CategoryItem(
     }
 }
 
+// Hiển thị danh sách gợi ý tìm kiếm
 @Composable
-fun ProductList(
+fun ProductListFind(
     products: List<Product>,
     navigateToRecipeDetailScreen: (Int) -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .background(Color.White)
+    ) {
         products.forEach { product ->
-            ProductItem(product = product, navigateToRecipeDetailScreen)
-            Divider(color = Color.Black)
+            ProductItemFind(product = product, navigateToRecipeDetailScreen)
+            Divider(color = Color.Gray, thickness = 0.5.dp)
         }
     }
 }
-
 @Composable
-fun ProductItem(product: Product, navigateToRecipeDetailScreen:(Int)->Unit,) {
-    Text(text = product.name, modifier = Modifier.clickable { navigateToRecipeDetailScreen(product.id) })
+fun ProductItemFind(product: Product, navigateToRecipeDetailScreen:(Int)->Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .clickable { navigateToRecipeDetailScreen(product.id) }
+            .background(Color(0xFFF0F0F0), RoundedCornerShape(8.dp))
+            .padding(12.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = "Search Icon",
+            tint = Color.Gray,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = product.name,
+            color = Color.Black
+        )
+    }
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true)
-@Composable
-fun Demo_ExposedDropdownMenuBox() {
-    val context = LocalContext.current
-    val coffeeDrinks = arrayOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
 
+// Hiển thị danh sách random
+@Composable
+fun ProductListRanDom(
+    products: List<Product>,
+    navigateToRecipeDetailScreen: (Int) -> Unit
+) {
+    products.forEach { product ->
+        ProductItemRanDom(product = product, navigateToRecipeDetailScreen)
+    }
+}
+@Composable
+fun ProductItemRanDom(
+    product: Product,
+    navigateToRecipeDetailScreen:(Int)->Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(32.dp)
+            .clickable { navigateToRecipeDetailScreen(product.id) }
+            .padding(end = 20.dp),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+        Image(
+            painterResource(
+                id = product.image
+            ),
+            contentDescription = null,
+            modifier = Modifier
+                .width(240.dp)
+                .height(160.dp)
+                .clip(shape = RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.FillWidth
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(8.dp))
+                .background(Color(0xffF5F5DC))
+                .padding(8.dp)
         ) {
-            TextField(
-                value = selectedText,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
+            Text(
+                text = product.name,
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(start = 6.dp)
             )
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Row {
+                Text(
+                    text = "\uD83D\uDD50 ${product.timeComplete} phút",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(start = 6.dp, end = 70.dp)
 
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                coffeeDrinks.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            selectedText = item
-                            expanded = false
-                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                        }
+                )
+                Box(
+                    modifier = Modifier
+                        .background(colorResource(id = R.color.primaryColor))
+                        .padding(3.dp),
+                ) {
+                    Text(
+                        text = product.category[0].name,
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleLarge
                     )
                 }
             }
         }
     }
+}
+// Hiển thị danh sách sản phẩm mới nhất
+@Composable
+fun ProductListNew(
+    products: List<Product>,
+    navigateToRecipeDetailScreen: (Int) -> Unit
+) {
+    products.forEach { product ->
+        ProductItemNew(product = product, navigateToRecipeDetailScreen)
+    }
+}
+@Composable
+fun ProductItemNew(
+    product: Product,
+    navigateToRecipeDetailScreen:(Int)->Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickable { navigateToRecipeDetailScreen(product.id) }
+            .background(Color(0xffF5F5DC)),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = product.image),
+            contentDescription = "image",
+            modifier = Modifier
+                .clip(shape = RoundedCornerShape(8.dp))
+                .size(78.dp),
+            contentScale = ContentScale.Crop
+        )
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = product.name,
+                style = MaterialTheme.typography.headlineLarge
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Row(
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = "\uD83D\uDD50 ${product.timeComplete} phút",
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    shape = RoundedCornerShape(8.dp),
+                    onClick = { navigateToRecipeDetailScreen(product.id) },
+                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.primaryColor)),
+                    modifier = Modifier.size(100.dp, 35.dp),
+                    contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
+                ) {
+                    Text(
+                        text = "Xem ngay",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+            }
+        }
+    }
+    Spacer(modifier = Modifier.padding(top = 20.dp))
 }
