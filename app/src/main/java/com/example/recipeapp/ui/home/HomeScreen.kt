@@ -1,5 +1,6 @@
 package com.example.recipeapp.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -73,6 +74,7 @@ fun HomeScreen(
     val textFieldValue = remember { mutableStateOf(TextFieldValue()) }
     val filteredProducts = remember { mutableStateOf(emptyList<Product>()) }
     val isSearchPerformed = remember { mutableStateOf(false) }
+    val hasNavigated = remember { mutableStateOf(false) }
 
     Box {
         LazyColumn(
@@ -83,7 +85,6 @@ fun HomeScreen(
             item {
                 Spacer(modifier = Modifier.padding(top = 30.dp))
                 Text(text = "Xin chào,", style = MaterialTheme.typography.displayLarge)
-                Text(text = "Người dùng.", style = MaterialTheme.typography.displayLarge)
                 Text(
                     text = "Hãy chọn công thức phù hợp cho bữa ăn của gia đình bạn nào !!",
                     style = MaterialTheme.typography.displaySmall,
@@ -98,7 +99,7 @@ fun HomeScreen(
                         textFieldValue.value = it
                         filteredProducts.value = if (it.text.isNotEmpty()) {
                             products.filter { product ->
-                                product.name.contains(it.text, ignoreCase = true)
+                                product.name.startsWith(it.text, ignoreCase = true)
                             }
                         } else {
                             emptyList()
@@ -109,20 +110,19 @@ fun HomeScreen(
                     modifier = Modifier
                         .padding(start = 20.dp, end = 20.dp)
                         .fillMaxWidth()
-                        .background(Color(0xFFF0F0F0), RoundedCornerShape(16.dp))
-                        .clickable { navigateToFindNameProScreen(textFieldValue.value.text) },
+                        .background(Color(0xFFF0F0F0), RoundedCornerShape(16.dp)),
                     shape = RoundedCornerShape(20.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Search
                     ),
                     keyboardActions = KeyboardActions(onSearch = {
-                        isSearchPerformed.value = true
+                        if (!hasNavigated.value) {
+                            isSearchPerformed.value = true
+                            hasNavigated.value = true
+                            navigateToFindNameProScreen(textFieldValue.value.text)
+                        }
                     })
                 )
-
-                if (textFieldValue.value.text.isNotEmpty() && isSearchPerformed.value) {
-                    navigateToFindNameProScreen(textFieldValue.value.text)
-                }
                 Row(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                 ) {
@@ -261,13 +261,28 @@ fun ProductListFind(
     products: List<Product>,
     navigateToRecipeDetailScreen: (Int) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .background(Color.White)
-    ) {
-        products.forEach { product ->
-            ProductItemFind(product = product, navigateToRecipeDetailScreen)
+    if (products.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .background(Color.White)
+        ) {
+            Text(
+                text = "Không có kết quả nào được tìm thấy !!",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = 16.dp, bottom = 3.dp, start = 10.dp, end = 10.dp),
+                color = Color.Red
+            )
             Divider(color = Color.Gray, thickness = 0.5.dp)
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .background(Color.White)
+        ) {
+            products.forEach { product ->
+                ProductItemFind(product = product, navigateToRecipeDetailScreen)
+                Divider(color = Color.Gray, thickness = 0.5.dp)
+            }
         }
     }
 }
@@ -324,7 +339,7 @@ fun ProductItemRanDom(
             ),
             contentDescription = null,
             modifier = Modifier
-                .width(240.dp)
+                .width(220.dp)
                 .height(160.dp)
                 .clip(shape = RoundedCornerShape(8.dp)),
             contentScale = ContentScale.FillWidth
@@ -339,27 +354,34 @@ fun ProductItemRanDom(
             Text(
                 text = product.name,
                 style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(start = 6.dp)
+                modifier = Modifier.padding(start = 6.dp),
             )
             Spacer(modifier = Modifier.padding(top = 10.dp))
-            Row {
+            Row(
+                modifier = Modifier.width(220.dp)
+            ) {
                 Text(
                     text = "\uD83D\uDD50 ${product.timeComplete} phút",
                     style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(start = 6.dp, end = 70.dp)
-
+                    modifier = Modifier.padding(start = 6.dp, end = 60.dp)
                 )
-                Box(
-                    modifier = Modifier
-                        .background(colorResource(id = R.color.primaryColor))
-                        .padding(3.dp),
-                ) {
-                    Text(
-                        text = product.category[0].name,
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .padding(end = 10.dp, bottom = 10.dp)
+                .align(Alignment.BottomEnd),
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(colorResource(id = R.color.primaryColor))
+                    .padding(2.dp)
+            ) {
+                Text(
+                    text = product.category[0].name,
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
         }
     }

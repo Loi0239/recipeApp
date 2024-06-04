@@ -24,6 +24,8 @@ import com.example.recipeapp.ui.recipe_person.RecipePerson
 import com.example.recipeapp.ui.recipe_person.ShowRecipeDestination
 import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipe
 import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipeDestination
+import com.example.recipeapp.ui.recipe_person.recipe_detail.RecipeDetailPerson
+import com.example.recipeapp.ui.recipe_person.recipe_detail.RecipeDetailPersonDestination
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipe
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipeDestination
 import com.example.recipeapp.ui.shoppingList.ShoppingListDestination
@@ -67,7 +69,7 @@ fun RecipeNavHost(
         }
         // Danh mục công thức
         composable(
-            route = CategoryProductScreenDestination.routeWithId1,
+            route = CategoryProductScreenDestination.routeWithId,
             arguments = listOf(navArgument(CategoryProductScreenDestination.categoryId) {
                 type = NavType.IntType
             })
@@ -98,9 +100,25 @@ fun RecipeNavHost(
         // Trang Profile, show công thức của nd
         composable(route = ShowRecipeDestination.route){
             RecipePerson(
+                recipeAppViewModel = recipeAppViewModel,
                 navigateToUpdateRecipe = {
                     navController.navigate("${UpdateRecipeDestination.route}/${it}")
                 },
+                navigateToRecipeDetailPerson = {
+                    navController.navigate("${RecipeDetailPersonDestination.route}/${it}")
+                }
+            )
+        }
+        // Trang công thức chi tiết người dùng
+        composable(
+            route = RecipeDetailPersonDestination.routeWithID,
+            arguments = listOf(navArgument(RecipeDetailPersonDestination.idRecipe) {
+                type = NavType.IntType
+            })
+        ){
+            RecipeDetailPerson(
+                recipeAppViewModel = recipeAppViewModel,
+                navigateBack = {navController.popBackStack()}
             )
         }
         // Thêm công thức
@@ -117,7 +135,8 @@ fun RecipeNavHost(
             })
         ){
             UpdateRecipe(
-                navigateBack = {navController.popBackStack()}
+                recipeAppViewModel = recipeAppViewModel,
+                navigateBack = {navController.popBackStack()},
             )
         }
         // Yêu thích

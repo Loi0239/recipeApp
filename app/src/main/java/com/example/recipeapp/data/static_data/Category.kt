@@ -9,23 +9,32 @@ class Categories{
     var listCategory = mutableListOf(
         Category(
             id = 0,
-            name = "Món ăn mặn"
+            name = "Món khai vị"
         ),
         Category(
             id = 1,
-            name = "Món ăn chay"
+            name = "Món chính"
         ),
         Category(
             id = 2,
-            name = "Món xào"
+            name = "Món tráng miệng"
         ),
         Category(
             id = 3,
-            name = "Món chiên"
+            name = "Món ăn sáng"
+
         ),
         Category(
             id = 4,
-            name = "Món luộc"
+            name = "Đồ nướng"
+        ),
+        Category(
+            id = 5,
+            name = "Món rau củ"
+        ),
+        Category(
+            id = 6,
+            name = "Món canh"
         ),
     )
     public fun getCategoryList(): MutableList<Category> {

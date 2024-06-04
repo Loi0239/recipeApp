@@ -157,7 +157,7 @@ fun LayoutIngredient(
                                 .background(Color.LightGray, RoundedCornerShape(8.dp))
                                 .fillMaxWidth()
                         ) {
-                            Producer(step = it.step, des = it.des)
+                            Produce(step = it.step, des = it.des)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
@@ -188,9 +188,9 @@ fun Topbar(
                         .padding(vertical = 4.dp, horizontal = 8.dp)
                         .clip(shape = RoundedCornerShape(8.dp))
                         .let {
-                            if(checkAddShopping){
+                            if (checkAddShopping) {
                                 it.background(colorResource(id = R.color.primaryColor))
-                            }else{
+                            } else {
                                 it.background(Color.LightGray)
                             }
                         },
@@ -234,8 +234,9 @@ fun ImageCard(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(260.dp)
+                    .height(249.dp)
                     .clip(RoundedCornerShape(20.dp))
+                    .background(Color.Black.copy(alpha = 0.2f))
             )
         }
 
@@ -296,7 +297,6 @@ fun ImageCard(
                             viewModel.updateCheckFavourite()
                             Log.i("checkdelete", "$checkActionFavourite")
                         }
-
                     } else {
                         coroutineScope.launch {
                             viewModel.addFavourite()
@@ -334,7 +334,8 @@ fun Ingredient(img:Int,name:String,kg:String){
     Box(
         Modifier
             .background(Color(0xFFF0F0F0), RoundedCornerShape(8.dp))
-            .fillMaxWidth()) {
+            .fillMaxWidth()
+    ) {
         Row(
             Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -362,21 +363,27 @@ fun Ingredient(img:Int,name:String,kg:String){
 }
 
 @Composable
-fun Producer(step:String,des:String){
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = step,
-            Modifier.padding(20.dp),
-            fontWeight = FontWeight(weight = 1000),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Text(text = des,
-            Modifier
-                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
-                .alpha(0.3f),
-            fontWeight = FontWeight(weight = 1000),
-            textAlign = TextAlign.Left,
-            style = MaterialTheme.typography.titleMedium,
-        )
+fun Produce(step:String,des:String){
+    Box(
+        Modifier
+            .background(Color(0xFFF0F0F0), RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+    ) {
+        Column {
+            Text(
+                text = step,
+                Modifier.padding(20.dp),
+                fontWeight = FontWeight(weight = 1000),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(text = des,
+                Modifier
+                    .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+                    .alpha(0.3f),
+                fontWeight = FontWeight(weight = 700),
+                textAlign = TextAlign.Left,
+                style = MaterialTheme.typography.titleMedium,
+            )
+        }
     }
 }

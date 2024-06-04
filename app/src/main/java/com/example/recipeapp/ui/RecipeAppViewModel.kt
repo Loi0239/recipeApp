@@ -24,6 +24,7 @@ import com.example.recipeapp.ui.product.find_name_product.FindNameViewModel
 import com.example.recipeapp.ui.recipe.RecipeViewModel
 import com.example.recipeapp.ui.recipe_person.ShowRecipeViewModel
 import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipeViewModel
+import com.example.recipeapp.ui.recipe_person.recipe_detail.RecipeDetailPerViewModel
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipeViewModel
 import com.example.recipeapp.ui.shoppingList.ShoppingListViewModel
 
@@ -83,6 +84,14 @@ class RecipeAppViewModel : ViewModel() {
                 ShowRecipeViewModel(
                     recipeApplication().container.recipePersonRepository,
                     recipeApplication().container.favouriteRepository
+                )
+            }
+
+            initializer {
+                RecipeDetailPerViewModel(
+                    recipeApplication().container.recipePersonRepository,
+                    recipeApplication().container.ingredientRepository,
+                    this.createSavedStateHandle()
                 )
             }
 

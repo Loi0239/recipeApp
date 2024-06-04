@@ -23,6 +23,10 @@ interface RecipePersonDao {
     @Query("SELECT * from CongThucNguoiDung WHERE I_id_cong_thuc_nd = :id")
     fun getItemRecipeStream(id: Int): Flow<RecipePerson>
 
+    // Hiển thị danh sách cụ thể
+    @Query("SELECT * from CongThucNguoiDung WHERE I_id_cong_thuc_nd = :id")
+    fun getRecipeDetail(id: Int): Flow<RecipePerson>
+
     @Update
     suspend fun updateRecipePerson(recipePerson: RecipePerson)
 

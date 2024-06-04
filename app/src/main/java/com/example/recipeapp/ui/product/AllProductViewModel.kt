@@ -36,7 +36,6 @@ class AllProductViewModel (private val favouriteRepository: FavouriteRepository)
 
     fun fillFavourite(favouriteList: List<Favourite>,idProduct: Int):Boolean{
         for (favorite in favouriteList) {
-            Log.i("ok", "${favorite.idProduct}")
             if (favorite.idProduct == idProduct) {
                 // Xử lý khi tìm thấy sản phẩm yêu thích
                 return true

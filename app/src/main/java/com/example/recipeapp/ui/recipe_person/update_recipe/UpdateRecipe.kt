@@ -1,5 +1,6 @@
 package com.example.recipeapp.ui.recipe_person.update_recipe
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,15 +51,19 @@ object UpdateRecipeDestination: NavigationDestination {
 
 @Composable
 fun UpdateRecipe(
+    recipeAppViewModel: RecipeAppViewModel,
     updateRecipeViewModel: UpdateRecipeViewModel = viewModel(factory = RecipeAppViewModel.Factory),
     navigateBack:()->Unit
 ){
-    val idRecipe = updateRecipeViewModel.idRecipe
     val recipePerson = updateRecipeViewModel.recipePerson
     val ingredients: List<Ingredient> = updateRecipeViewModel.ingredient ?: emptyList()
     val coroutineScope = rememberCoroutineScope()
-    val onChangeValue = updateRecipeViewModel::updateUiState
+    val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        recipeAppViewModel.setFooterState(false)
+    }
+    
     LazyColumn{
         item {
             Row(
@@ -96,7 +103,7 @@ fun UpdateRecipe(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                 ) {
                     Text(
-                        text = "Tên công thức:",
+                        text = "\uD83D\uDC68\u200D\uD83C\uDF73 Tên công thức:",
                         fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.padding(top = 15.dp))
@@ -115,7 +122,7 @@ fun UpdateRecipe(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Thời gian:",
+                            text = "\uD83D\uDD50 Thời gian:",
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.padding(end = 6.dp))
@@ -135,7 +142,7 @@ fun UpdateRecipe(
                     }
                     Spacer(modifier = Modifier.padding(top = 15.dp))
                     Text(
-                        text = "Danh sách nguyên liệu:",
+                        text = "\uD83D\uDCD1 Danh sách nguyên liệu:",
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.padding(top = 15.dp))
@@ -169,13 +176,12 @@ fun UpdateRecipe(
                                     )
                                 }
                             }
-
                             Spacer(modifier = Modifier.padding(top = 15.dp))
                         }
                     }
                     Spacer(modifier = Modifier.padding(top = 15.dp))
                     Text(
-                        text = "Bước làm:",
+                        text = "\uD83C\uDF7D\uFE0F Bước thực hiện:",
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.padding(top = 15.dp))
@@ -200,6 +206,7 @@ fun UpdateRecipe(
                                 updatedRecipe?.let {
                                     updateRecipeViewModel.updateRecipe(it)
                                     navigateBack()
+                                    Toast.makeText(context, "Sửa công thức thành công", Toast.LENGTH_SHORT).show()
                                 }
                             }
                         },

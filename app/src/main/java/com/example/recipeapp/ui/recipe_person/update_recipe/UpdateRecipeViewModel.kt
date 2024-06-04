@@ -19,6 +19,8 @@ class UpdateRecipeViewModel(
     private val ingredientRepository: IngredientRepository,
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
+    val idRecipe: Int = checkNotNull(savedStateHandle[UpdateRecipeDestination.idRecipe])
+
     var uiState by mutableStateOf(UiState())
         private set
 
@@ -27,8 +29,6 @@ class UpdateRecipeViewModel(
 
     var ingredient by mutableStateOf<List<Ingredient>>(emptyList())
         private set
-
-    val idRecipe: Int = checkNotNull(savedStateHandle[UpdateRecipeDestination.idRecipe])
 
     init {
         viewModelScope.launch {
