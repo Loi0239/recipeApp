@@ -48,7 +48,7 @@ import com.example.recipeapp.data.static_data.Product
 import com.example.recipeapp.data.static_data.Products
 import com.example.recipeapp.ui.RecipeAppViewModel
 import com.example.recipeapp.ui.navigation.NavigationDestination
-import com.example.recipeapp.ui.product.AllProductViewModel
+import com.example.recipeapp.ui.product.all_product.AllProductViewModel
 import kotlinx.coroutines.launch
 
 object FindNameProScreenDestination: NavigationDestination {
@@ -60,7 +60,7 @@ object FindNameProScreenDestination: NavigationDestination {
 @Composable
 fun FindNameProScreen(
     recipeAppViewModel: RecipeAppViewModel,
-    allProductViewModel: AllProductViewModel = viewModel(factory = RecipeAppViewModel.Factory),
+    allProductViewModel:AllProductViewModel = viewModel(factory = RecipeAppViewModel.Factory),
     navigateBack:()->Unit,
     navigateToRecipeDetailScreen:(Int)->Unit,
     findNameViewModel: FindNameViewModel = viewModel(factory = RecipeAppViewModel.Factory)

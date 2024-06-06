@@ -14,12 +14,8 @@ import com.example.recipeapp.ui.favouriteRecipe.FavouriteDestination
 import com.example.recipeapp.ui.favouriteRecipe.RecipeFavoriteScreen
 import com.example.recipeapp.ui.home.HomeDestination
 import com.example.recipeapp.ui.home.HomeScreen
-import com.example.recipeapp.ui.login.LoginDestination
-import com.example.recipeapp.ui.login.LoginScreen
 import com.example.recipeapp.ui.product.all_product.AllProductScreenDestination
 import com.example.recipeapp.ui.product.all_product.LayoutAllRecipe
-import com.example.recipeapp.ui.product.AllProductScreenDestination
-import com.example.recipeapp.ui.product.LayoutAllRecipe
 import com.example.recipeapp.ui.product.category_product.CategoryProductScreen
 import com.example.recipeapp.ui.product.category_product.CategoryProductScreenDestination
 import com.example.recipeapp.ui.product.find_name_product.FindNameProScreen
@@ -117,6 +113,9 @@ fun RecipeNavHost(
                 },
                 navigateToRecipeDetailPerson = {
                     navController.navigate("${RecipeDetailPersonDestination.route}/${it}")
+                },
+                navigateToSchedule = {
+                    navController.navigate(ScheduleDestination.route)
                 }
             )
         }

@@ -20,8 +20,6 @@ import com.example.recipeapp.data.static_data.FooterItem
 import com.example.recipeapp.data.static_data.FooterRepository
 import com.example.recipeapp.ui.favouriteRecipe.FavouriteRecipeViewModel
 import com.example.recipeapp.ui.home.HomeViewModel
-import com.example.recipeapp.ui.product.AllProductViewModel
-import com.example.recipeapp.ui.login.LoginViewModel
 import com.example.recipeapp.ui.product.all_product.AllProductViewModel
 import com.example.recipeapp.ui.product.category_product.CateProViewModel
 import com.example.recipeapp.ui.product.find_name_product.FindNameViewModel

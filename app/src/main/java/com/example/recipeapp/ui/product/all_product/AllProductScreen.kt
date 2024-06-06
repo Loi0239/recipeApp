@@ -65,7 +65,6 @@ object AllProductScreenDestination: NavigationDestination {
 
 @Composable
 fun LayoutAllRecipe(
-    navigateBack:()->Unit,
     navigateToRecipeDetailScreen:(Int)->Unit,
     recipeAppViewModel: RecipeAppViewModel,
     allProductViewModel: AllProductViewModel = viewModel(factory = RecipeAppViewModel.Factory)

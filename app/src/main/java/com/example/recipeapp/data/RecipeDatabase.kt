@@ -22,7 +22,7 @@ import com.example.recipeapp.data.dynamic_data.shopping.ShoppingDao
         RecipePerson::class,
         Ingredient::class,
         Schedule::class,
-    ], version = 3,
+    ], version = 4,
     exportSchema = true)
 abstract class RecipeDatabase: RoomDatabase() {
     abstract fun favouriteDao(): FavouriteDao

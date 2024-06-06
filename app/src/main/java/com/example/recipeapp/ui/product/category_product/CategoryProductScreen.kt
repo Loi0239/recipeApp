@@ -45,7 +45,7 @@ import com.example.recipeapp.data.static_data.Product
 import com.example.recipeapp.data.static_data.Products
 import com.example.recipeapp.ui.RecipeAppViewModel
 import com.example.recipeapp.ui.navigation.NavigationDestination
-import com.example.recipeapp.ui.product.AllProductViewModel
+import com.example.recipeapp.ui.product.all_product.AllProductViewModel
 import kotlinx.coroutines.launch
 
 object CategoryProductScreenDestination: NavigationDestination {

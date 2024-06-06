@@ -392,7 +392,6 @@ fun RecipeCard(
                 viewModel.updateIdSchedule(schedule.id)
                 recipeAppViewModel.updateIdProductSchedule(schedule.idProduct)
                 viewModel.updateIsBottomSheetAdd(false)
-//                viewModel.updateIsBottomSheetUpdateAndDelete(true)
                 viewModel.updateIsBottomSheetOpen(true)
 
             }
