@@ -1,6 +1,8 @@
 package com.example.recipeapp.ui
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,7 +10,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -20,13 +21,14 @@ import com.example.recipeapp.data.static_data.FooterRepository
 import com.example.recipeapp.ui.favouriteRecipe.FavouriteRecipeViewModel
 import com.example.recipeapp.ui.home.HomeViewModel
 import com.example.recipeapp.ui.login.LoginViewModel
-import com.example.recipeapp.ui.product.AllProductViewModel
+import com.example.recipeapp.ui.product.all_product.AllProductViewModel
 import com.example.recipeapp.ui.product.category_product.CateProViewModel
 import com.example.recipeapp.ui.product.find_name_product.FindNameViewModel
 import com.example.recipeapp.ui.recipe.RecipeViewModel
 import com.example.recipeapp.ui.recipe_person.ShowRecipeViewModel
 import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipeViewModel
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipeViewModel
+import com.example.recipeapp.ui.schedule.ScheduleViewModel
 import com.example.recipeapp.ui.shoppingList.ShoppingListViewModel
 
 class RecipeAppViewModel : ViewModel() {
@@ -40,9 +42,9 @@ class RecipeAppViewModel : ViewModel() {
         _footerState.value = newState
     }
 
-    fun updateIdUser(idUser:Int){
-        idUiState.idUser = idUser
-        Log.i("check", "updateIdUser: ${idUiState.idUser}")
+    fun updateIdProductSchedule(idProduct:Int){
+        idUiState.idProductAddSchedule = idProduct
+        Log.i("check", "updateIdUser: ${idUiState.idProductAddSchedule}")
     }
 
     companion object DeliveryViewModel{
@@ -128,6 +130,11 @@ class RecipeAppViewModel : ViewModel() {
                 )
             }
 
+            initializer {
+                ScheduleViewModel(
+                    recipeApplication().container.scheduleRepository
+                )
+            }
         }
     }
 
@@ -148,8 +155,7 @@ class RecipeAppViewModel : ViewModel() {
 }
 
 data class IdUiState(
-    var idUser:Int = 0,
-    var idCart:Int = 0,
+    var idProductAddSchedule:Int = -1
 )
 
 data class UiState(

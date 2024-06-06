@@ -54,7 +54,7 @@ class Products{
             image = R.drawable.food_example,
             timeComplete = 20,
             ingredient = listOf(
-                Ingredients().ingredientList[0].apply { quantity = "20 g" },
+                Ingredients().ingredientList[0].apply { quantity = "20 quả" },
                 Ingredients().ingredientList[1].apply { quantity = "3 g" },
                 Ingredients().ingredientList[3].apply { quantity = "5 g" }
 
@@ -95,7 +95,7 @@ class Products{
             image = R.drawable.food_example,
             timeComplete = 20,
             ingredient = listOf(
-                Ingredients().ingredientList[0].apply { quantity = "20 g" }
+                Ingredients().ingredientList[0].apply { quantity = "20 quả" }
             ),
             procedure = listOf(
                 Procedure(
@@ -113,7 +113,7 @@ class Products{
             image = R.drawable.food_example,
             timeComplete = 20,
             ingredient = listOf(
-                Ingredients().ingredientList[0].apply { quantity = "20 g" }
+                Ingredients().ingredientList[0].apply { quantity = "20 quả" }
             ),
             procedure = listOf(
                 Procedure(
@@ -167,11 +167,15 @@ class Products{
         return productList[idProduct]
     }
 
+    fun getNameProduct(idProduct:Int):String{
+        return productList[idProduct].name
+    }
+
     fun getIngredient(idProduct:Int):List<Ingredient>{
         return productList[idProduct].ingredient
     }
 
-    public fun getProductsByCategoryId(categoryId: Int): List<Product> {
+    fun getProductsByCategoryId(categoryId: Int): List<Product> {
         return productList.filter { product ->
             product.category.any { it.id == categoryId }
         }

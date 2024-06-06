@@ -1,5 +1,7 @@
 package com.example.recipeapp.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -14,8 +16,8 @@ import com.example.recipeapp.ui.home.HomeDestination
 import com.example.recipeapp.ui.home.HomeScreen
 import com.example.recipeapp.ui.login.LoginDestination
 import com.example.recipeapp.ui.login.LoginScreen
-import com.example.recipeapp.ui.product.AllProductScreenDestination
-import com.example.recipeapp.ui.product.LayoutAllRecipe
+import com.example.recipeapp.ui.product.all_product.AllProductScreenDestination
+import com.example.recipeapp.ui.product.all_product.LayoutAllRecipe
 import com.example.recipeapp.ui.product.category_product.CategoryProductScreen
 import com.example.recipeapp.ui.product.category_product.CategoryProductScreenDestination
 import com.example.recipeapp.ui.product.find_name_product.FindNameProScreen
@@ -28,9 +30,14 @@ import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipe
 import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipeDestination
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipe
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipeDestination
+import com.example.recipeapp.ui.schedule.ScheduleDestination
+import com.example.recipeapp.ui.schedule.ScheduleScreen
+import com.example.recipeapp.ui.schedule.findingForSchedule.FindForScheduleDestination
+import com.example.recipeapp.ui.schedule.findingForSchedule.FindForScheduleScreen
 import com.example.recipeapp.ui.shoppingList.ShoppingListDestination
 import com.example.recipeapp.ui.shoppingList.ShoppingListScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RecipeNavHost(
     navController: NavHostController,
@@ -180,6 +187,21 @@ fun RecipeNavHost(
         ){
             ShoppingListScreen(
                 recipeAppViewModel = recipeAppViewModel
+            )
+        }
+
+        composable(route = ScheduleDestination.route){
+            ScheduleScreen(
+                recipeAppViewModel = recipeAppViewModel,
+                navToFindForSchedule = {navController.navigate(FindForScheduleDestination.route)},
+                navToBack = {navController.popBackStack()}
+            )
+        }
+
+        composable(route = FindForScheduleDestination.route){
+            FindForScheduleScreen(
+                recipeAppViewModel = recipeAppViewModel,
+                navToBack = {navController.popBackStack()}
             )
         }
     }

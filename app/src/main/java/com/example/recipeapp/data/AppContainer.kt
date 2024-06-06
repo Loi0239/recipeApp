@@ -9,6 +9,8 @@ import com.example.recipeapp.data.dynamic_data.ingredient.IngredientRepository
 import com.example.recipeapp.data.dynamic_data.ingredient.OfflinedIngredientRepository
 import com.example.recipeapp.data.dynamic_data.recipe_person.OfflineRecipePRepository
 import com.example.recipeapp.data.dynamic_data.recipe_person.RecipePersonRepository
+import com.example.recipeapp.data.dynamic_data.schedule.OfflineScheduleRepository
+import com.example.recipeapp.data.dynamic_data.schedule.ScheduleRepository
 import com.example.recipeapp.data.dynamic_data.shopping.OfflineShoppingRepository
 import com.example.recipeapp.data.dynamic_data.shopping.ShoppingRepository
 
@@ -18,6 +20,7 @@ interface AppContainer{
     val shoppingRepository: ShoppingRepository
     val recipePersonRepository: RecipePersonRepository
     val ingredientRepository : IngredientRepository
+    val scheduleRepository:ScheduleRepository
 }
 
 class AppDataContainer(private val context: Context): AppContainer{
@@ -35,5 +38,8 @@ class AppDataContainer(private val context: Context): AppContainer{
     }
     override val ingredientRepository: IngredientRepository by lazy {
         OfflinedIngredientRepository(RecipeDatabase.getDatabase(context).ingredientDao())
+    }
+    override val scheduleRepository: ScheduleRepository by lazy {
+        OfflineScheduleRepository(RecipeDatabase.getDatabase(context).scheduleDao())
     }
 }

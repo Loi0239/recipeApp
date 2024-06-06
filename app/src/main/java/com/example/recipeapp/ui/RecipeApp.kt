@@ -1,5 +1,7 @@
 package com.example.recipeapp.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,8 +32,10 @@ import com.example.recipeapp.R
 import com.example.recipeapp.ui.favouriteRecipe.FavouriteDestination
 import com.example.recipeapp.ui.home.HomeDestination
 import com.example.recipeapp.ui.navigation.RecipeNavHost
+import com.example.recipeapp.ui.schedule.ScheduleDestination
 import com.example.recipeapp.ui.shoppingList.ShoppingListDestination
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RecipeApp(
     navController: NavHostController = rememberNavController(),
@@ -87,6 +91,10 @@ fun Footer(
 
                                 4 -> {
                                     navController.navigate(ShoppingListDestination.route)
+                                }
+
+                                5 ->{
+                                    navController.navigate(ScheduleDestination.route)
                                 }
                             }
                         }

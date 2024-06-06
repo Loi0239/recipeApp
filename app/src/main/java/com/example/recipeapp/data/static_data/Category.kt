@@ -29,7 +29,7 @@ class Categories{
         ),
     )
 
-    public fun getCategoryList(): MutableList<Category> {
+    fun getCategoryList(): MutableList<Category> {
         return listCategory
     }
 }
