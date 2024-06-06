@@ -1,6 +1,8 @@
 package com.example.recipeapp.ui.recipe_person
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,32 +12,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,13 +54,19 @@ object ShowRecipeDestination: NavigationDestination {
 }
 @Composable
 fun RecipePerson(
+    recipeAppViewModel: RecipeAppViewModel,
     viewModel: ShowRecipeViewModel = viewModel(factory = RecipeAppViewModel.Factory),
-    navigateBack:()->Unit,
-    navToShowRecipe:()->Unit,
     navigateToUpdateRecipe:(Int)->Unit,
+    navigateToRecipeDetailPerson:(Int)->Unit
 ){
     val coroutineScope = rememberCoroutineScope()
     val homeUiState by viewModel.showDataState.collectAsState()
+    val countRecipe by viewModel.countRecipeState.collectAsState()
+    val countFavour by viewModel.countFavourState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        recipeAppViewModel.setFooterState(true)
+    }
 
     LazyColumn{
         item {
@@ -79,7 +88,7 @@ fun RecipePerson(
                 ) {
                     Column {
                         Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_background),
+                            painter = painterResource(id = R.drawable.avatar),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(120.dp)
@@ -88,13 +97,13 @@ fun RecipePerson(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = "John Doe",
-                            fontSize = 28.sp,
+                            text = "Người dùng",
+                            fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
                     }
-                    Spacer(modifier = Modifier.padding(start = 35.dp))
+                    Spacer(modifier = Modifier.padding(start = 25.dp))
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -106,7 +115,7 @@ fun RecipePerson(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "4",
+                            text = "$countRecipe",
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -123,32 +132,32 @@ fun RecipePerson(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "14",
+                            text = "$countFavour",
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
-                Row(
-                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
-                ) {
-                    Spacer(modifier = Modifier.height(5.dp))
-                    Column {
-                        Text(
-                            text = "Nội trợ",
-                            fontSize = 16.sp,
-                            color = Color(0xffA9A9A9),
-                            textAlign = TextAlign.Left
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Passionate about food and life \uD83E\uDD58\uD83C\uDF72\uD83C\uDF5D\uD83C\uDF71",
-                            fontSize = 16.sp,
-                            color = Color(0xffA9A9A9),
-                            textAlign = TextAlign.Left
-                        )
-                    }
-                }
+//                Row(
+//                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+//                ) {
+//                    Spacer(modifier = Modifier.height(5.dp))
+//                    Column {
+//                        Text(
+//                            text = "Nội trợ",
+//                            fontSize = 16.sp,
+//                            color = Color(0xffA9A9A9),
+//                            textAlign = TextAlign.Left
+//                        )
+//                        Spacer(modifier = Modifier.height(8.dp))
+//                        Text(
+//                            text = "Passionate about food and life \uD83E\uDD58\uD83C\uDF72\uD83C\uDF5D\uD83C\uDF71",
+//                            fontSize = 16.sp,
+//                            color = Color(0xffA9A9A9),
+//                            textAlign = TextAlign.Left
+//                        )
+//                    }
+//                }
                 Spacer(modifier = Modifier.padding(top = 15.dp))
                 Divider(
                     modifier = Modifier
@@ -164,7 +173,7 @@ fun RecipePerson(
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp)
             ) {
                 Text(
-                    text = "Danh sách công thức của bạn",
+                    text = "Danh sách công thức của tôi",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -177,7 +186,8 @@ fun RecipePerson(
                         viewModel.deleteRecipe(recipePerson)
                     }
                 },
-                navigateToUpdateRecipe
+                navigateToUpdateRecipe,
+                navigateToRecipeDetailPerson
             )
             Spacer(modifier = Modifier.padding(bottom = 35.dp))
         }
@@ -189,6 +199,7 @@ private fun RecipeList(
     itemList: List<RecipePerson>,
     onDeleteClicked: (RecipePerson) -> Unit,
     navigateToUpdateRecipe:(Int)->Unit,
+    navigateToRecipeDetailPerson:(Int) -> Unit
 ) {
     Column(
         modifier = Modifier.padding(start = 20.dp, end = 20.dp)
@@ -197,7 +208,8 @@ private fun RecipeList(
             RecipeItem(
                 item = item,
                 onDeleteClicked = onDeleteClicked,
-                navigateToUpdateRecipe = navigateToUpdateRecipe
+                navigateToUpdateRecipe = navigateToUpdateRecipe,
+                navigateToRecipeDetailPerson
             )
             Spacer(modifier = Modifier.padding(bottom = 30.dp))
         }
@@ -209,9 +221,12 @@ private fun RecipeItem(
     item: RecipePerson,
     onDeleteClicked: (RecipePerson) -> Unit,
     navigateToUpdateRecipe:(Int) -> Unit,
+    navigateToRecipeDetailPerson:(Int) -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { navigateToRecipeDetailPerson(item.id) }
     ) {
         Row {
             Column(
@@ -228,7 +243,7 @@ private fun RecipeItem(
                 Spacer(modifier = Modifier.padding(top = 10.dp))
                 Row {
                     Text(
-                        text = "item.ingredient",
+                        text = item.step,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -249,16 +264,48 @@ private fun RecipeItem(
                 ) {
                     Icon(Icons.Default.Create, contentDescription = "Fix")
                 }
-                Button(
-                    onClick = { onDeleteClicked(item) },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Icon(Icons.Default.Delete, contentDescription = "Del")
-                }
+                DialogButtonDeleteRecipe(item = item, onDeleteClicked = onDeleteClicked)
             }
         }
+    }
+}
+
+@Composable
+fun DialogButtonDeleteRecipe(
+    item: RecipePerson,
+    onDeleteClicked: (RecipePerson) -> Unit,
+) {
+    val openDialog = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    Button(
+        onClick = { openDialog.value = true },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Black
+        )
+    ) {
+        Icon(Icons.Default.Delete, contentDescription = "Del")
+    }
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = { openDialog.value = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDeleteClicked(item)
+                    openDialog.value = false
+                    Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show()
+                }) {
+                    Text("Xác nhận")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { openDialog.value = false }) {
+                    Text("Hủy")
+                }
+            },
+            title = { Text(text = "Xóa công thức") },
+            text = { Text(text = "Bạn có muốn xóa không ?") }
+        )
     }
 }

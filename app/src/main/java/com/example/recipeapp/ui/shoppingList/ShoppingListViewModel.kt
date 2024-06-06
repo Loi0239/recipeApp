@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeapp.data.dynamic_data.favourite.Favourite
 import com.example.recipeapp.data.dynamic_data.shopping.Shopping
 import com.example.recipeapp.data.dynamic_data.shopping.ShoppingRepository
 import com.example.recipeapp.data.static_data.Ingredient
@@ -205,5 +204,3 @@ private fun ShoppingState.deleteShopping(
     id = idShopping,
     idProduct = idProduct
 )
-
-

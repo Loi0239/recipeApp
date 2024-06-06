@@ -18,6 +18,8 @@ import com.example.recipeapp.ui.login.LoginDestination
 import com.example.recipeapp.ui.login.LoginScreen
 import com.example.recipeapp.ui.product.all_product.AllProductScreenDestination
 import com.example.recipeapp.ui.product.all_product.LayoutAllRecipe
+import com.example.recipeapp.ui.product.AllProductScreenDestination
+import com.example.recipeapp.ui.product.LayoutAllRecipe
 import com.example.recipeapp.ui.product.category_product.CategoryProductScreen
 import com.example.recipeapp.ui.product.category_product.CategoryProductScreenDestination
 import com.example.recipeapp.ui.product.find_name_product.FindNameProScreen
@@ -28,6 +30,8 @@ import com.example.recipeapp.ui.recipe_person.RecipePerson
 import com.example.recipeapp.ui.recipe_person.ShowRecipeDestination
 import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipe
 import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipeDestination
+import com.example.recipeapp.ui.recipe_person.recipe_detail.RecipeDetailPerson
+import com.example.recipeapp.ui.recipe_person.recipe_detail.RecipeDetailPersonDestination
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipe
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipeDestination
 import com.example.recipeapp.ui.schedule.ScheduleDestination
@@ -49,14 +53,7 @@ fun RecipeNavHost(
         startDestination = HomeDestination.route,
         modifier = modifier
     ){
-        composable(route = LoginDestination.route){
-            LoginScreen(
-//                navigateToHomeScreen = { navController.navigate(HomeDestination.route) },
-//                navigateToSignUp = { navController.navigate(SignUpDestination.route) },
-                recipeAppViewModel = recipeAppViewModel,
-            )
-        }
-
+        // Trang chủ
         composable(route = HomeDestination.route){
             HomeScreen(
                 recipeAppViewModel = recipeAppViewModel,
@@ -70,52 +67,33 @@ fun RecipeNavHost(
                 navigateToFindNameProScreen= {
                     navController.navigate("${FindNameProScreenDestination.route}/${it}")
                 },
-                navigateToAddRecipe = { navController.navigate(AddRecipeDestination.route) },
-                navigateToShowRecipe = { navController.navigate(ShowRecipeDestination.route) },
             )
         }
-
-       /* composable(route = HomeDestination.route){
-            HomeScreen(
-                recipeAppViewModel = recipeAppViewModel,
-                navToHome = { navController.navigate(HomeDestination.route) },
-                navigateToAllProductScreen = { navController.navigate(AllProductScreenDestination.route) },
-                navigateToCategoryProductScreen= {
-                    navController.navigate("${CategoryProductScreenDestination.route}/${it}")
-                },
-                navigateToRecipeDetailScreen= {
-                    navController.navigate("${IngredientDestination.route}/${it}")
-                },
-                navigateToFindNameProScreen= {
-                    navController.navigate("${FindNameProScreenDestination.route}/${it}")
-                },
-                navigateToAddRecipe = { navController.navigate(AddRecipeDestination.route) },
-                navigateToShowRecipe = { navController.navigate(ShowRecipeDestination.route) },
-            )
-        }*/
+        // Tất cả công thức
         composable(route = AllProductScreenDestination.route){
             LayoutAllRecipe(
-                navigateBack = {navController.popBackStack()},
                 navigateToRecipeDetailScreen= {
                     navController.navigate("${IngredientDestination.route}/${it}")
                 },
                 recipeAppViewModel = recipeAppViewModel
             )
         }
+        // Danh mục công thức
         composable(
-            route = CategoryProductScreenDestination.routeWithId1,
+            route = CategoryProductScreenDestination.routeWithId,
             arguments = listOf(navArgument(CategoryProductScreenDestination.categoryId) {
                 type = NavType.IntType
             })
         ){
             CategoryProductScreen(
+                recipeAppViewModel = recipeAppViewModel,
                 navigateBack = {navController.popBackStack()},
-                navToCategoryProduct = { navController.navigate(CategoryProductScreenDestination.route) },
                 navigateToRecipeDetailScreen= {
                     navController.navigate("${IngredientDestination.route}/${it}")
                 }
             )
         }
+        // Tìm kiếm công thức
         composable(
             route = FindNameProScreenDestination.routeWithProductName,
             arguments = listOf(navArgument(FindNameProScreenDestination.keyproductName) {
@@ -123,31 +101,44 @@ fun RecipeNavHost(
             })
         ){
             FindNameProScreen(
+                recipeAppViewModel = recipeAppViewModel,
                 navigateBack = {navController.popBackStack()},
-                navToFindNamePro = { navController.navigate(FindNameProScreenDestination.route) },
                 navigateToRecipeDetailScreen= {
                     navController.navigate("${IngredientDestination.route}/${it}")
                 },
             )
         }
+        // Trang Profile, show công thức của nd
         composable(route = ShowRecipeDestination.route){
             RecipePerson(
-                navigateBack = {navController.popBackStack()},
-                navToShowRecipe = { navController.navigate(ShowRecipeDestination.route) },
+                recipeAppViewModel = recipeAppViewModel,
                 navigateToUpdateRecipe = {
                     navController.navigate("${UpdateRecipeDestination.route}/${it}")
                 },
+                navigateToRecipeDetailPerson = {
+                    navController.navigate("${RecipeDetailPersonDestination.route}/${it}")
+                }
             )
         }
+        // Trang công thức chi tiết người dùng
+        composable(
+            route = RecipeDetailPersonDestination.routeWithID,
+            arguments = listOf(navArgument(RecipeDetailPersonDestination.idRecipe) {
+                type = NavType.IntType
+            })
+        ){
+            RecipeDetailPerson(
+                recipeAppViewModel = recipeAppViewModel,
+                navigateBack = {navController.popBackStack()}
+            )
+        }
+        // Thêm công thức
         composable(route = AddRecipeDestination.route){
             AddRecipe(
-                navigateBack = {navController.popBackStack()},
-                navToAddRecipe = { navController.navigate(AddRecipeDestination.route) },
-                navigateToUpdateRecipe = {
-                    navController.navigate("${UpdateRecipeDestination.route}/${it}")
-                },
+                navigateToShowRecipe = { navController.navigate(ShowRecipeDestination.route) },
             )
         }
+        // Cập nhật công thức
         composable(
             route = UpdateRecipeDestination.routeWithID,
             arguments = listOf(navArgument(UpdateRecipeDestination.idRecipe) {
@@ -155,12 +146,11 @@ fun RecipeNavHost(
             })
         ){
             UpdateRecipe(
+                recipeAppViewModel = recipeAppViewModel,
                 navigateBack = {navController.popBackStack()},
-                navToUpdateRecipe = { navController.navigate(UpdateRecipeDestination.route) },
             )
         }
-
-
+        // Yêu thích
         composable(route = FavouriteDestination.route){
             RecipeFavoriteScreen(
                 navigateToRecipeDetailScreen={
@@ -169,7 +159,7 @@ fun RecipeNavHost(
                 recipeAppViewModel = recipeAppViewModel
             )
         }
-
+        // Chi tiết công thức
         composable(
             route =  IngredientDestination.routeWithId,
             arguments = listOf(navArgument(IngredientDestination.productId) {
@@ -181,7 +171,7 @@ fun RecipeNavHost(
                 navToBack = {navController.popBackStack()}
             )
         }
-
+        // Danh sách mua sắm
         composable(
             route = ShoppingListDestination.route
         ){

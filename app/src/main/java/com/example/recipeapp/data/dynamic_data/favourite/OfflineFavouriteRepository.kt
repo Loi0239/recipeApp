@@ -17,4 +17,7 @@ class OfflineFavouriteRepository(private val favouriteDao: FavouriteDao): Favour
 
     override fun selectFavourite(): Flow<List<Favourite>> =
         favouriteDao.selectFavourite()
+
+    override suspend fun getCountFavourite(): Int =
+        favouriteDao.getCountFavourite()
 }

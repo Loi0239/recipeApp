@@ -1,33 +1,26 @@
 package com.example.recipeapp.ui.recipe_person.add_recipe
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,13 +47,12 @@ import kotlinx.coroutines.launch
 object AddRecipeDestination: NavigationDestination {
     override val route: String = "Add recipe"
 }
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddRecipe(
     viewModel: AddRecipeViewModel = viewModel(factory = RecipeAppViewModel.Factory),
-    navigateBack:()->Unit,
-    navToAddRecipe:()->Unit,
-    navigateToUpdateRecipe:(Int)->Unit,
+    navigateToShowRecipe:()->Unit
 ){
     var list by remember { mutableStateOf(viewModel.uiState.ingredients.toMutableList()) }
     var nameIngre by remember { mutableStateOf("") }
@@ -71,33 +63,44 @@ fun AddRecipe(
     var expanded by remember { mutableStateOf(false) }
     val units = arrayOf("g", "kg", "l", "ml", "quả", "củ", "cây", "lá", "gói")
     var selectedUnit by remember { mutableStateOf(units[0]) }
+    val context = LocalContext.current
+
+    var nameError by remember { mutableStateOf<String?>(null) }
+    var timeError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(viewModel.uiState.ingredients) {
         list = viewModel.uiState.ingredients.toMutableList()
     }
 
+    fun validateFields(): Boolean {
+        var isValid = true
+
+        if (addRecipeUiState.nameRecipe.isBlank()) {
+            nameError = "Tên công thức không được để trống"
+            isValid = false
+        } else {
+            nameError = null
+        }
+
+        if (addRecipeUiState.time.isBlank()) {
+            timeError = "Thời gian không được để trống"
+            isValid = false
+        } else {
+            timeError = null
+        }
+
+        return isValid
+    }
+
     LazyColumn{
         item {
             Column {
+                Spacer(modifier = Modifier.padding(top = 20.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Button(
-                        onClick = { navigateBack() },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        )
-
-                    ) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = "back",
-                            modifier = Modifier.size(30.dp),
-                            Color(0xff74777a)
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(start = 10.dp))
                     Text(
                         text = "Thêm công thức mới",
                         fontSize = 24.sp,
@@ -105,6 +108,7 @@ fun AddRecipe(
                         textAlign = TextAlign.Center
                     )
                 }
+
                 Spacer(modifier = Modifier.padding(top = 20.dp))
 
                 Column(
@@ -119,14 +123,22 @@ fun AddRecipe(
                                 addRecipeUiState.copy(nameRecipe = it)
                             )
                         },
-                        label = { Text(text = "Tên công thức....") },
+                        label = { Text(text = "Tên công thức") },
                         visualTransformation = VisualTransformation.None,
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Done
                         ),
+                        isError = nameError != null,
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier.fillMaxWidth()
                     )
+                    if (nameError != null) {
+                        Text(
+                            text = nameError ?: "",
+                            color = Color.Red,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.padding(top = 20.dp))
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -150,9 +162,17 @@ fun AddRecipe(
                                 keyboardType = KeyboardType.Number,
                                 imeAction = ImeAction.Done
                             ),
+                            isError = timeError != null,
                             shape = RoundedCornerShape(20.dp),
                             modifier = Modifier
                                 .width(120.dp)
+                        )
+                    }
+                    if (timeError != null) {
+                        Text(
+                            text = timeError ?: "",
+                            color = Color.Red,
+                            modifier = Modifier.padding(start = 16.dp)
                         )
                     }
                     Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -271,8 +291,12 @@ fun AddRecipe(
                     Spacer(modifier = Modifier.padding(top = 20.dp))
                     Button(
                         onClick = {
-                            coroutineScope.launch {
-                                viewModel.addRecipe()
+                            if (validateFields()) {
+                                coroutineScope.launch {
+                                    viewModel.addRecipe()
+                                    navigateToShowRecipe()
+                                    Toast.makeText(context, "Thêm công thức thành công", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -281,6 +305,7 @@ fun AddRecipe(
                     }
                 }
             }
+            Spacer(modifier = Modifier.padding(top = 70.dp))
         }
     }
 }

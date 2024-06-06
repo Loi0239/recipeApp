@@ -148,8 +148,8 @@ fun CategoryItem(
         onClick = { onCategorySelected(category) },
         modifier = Modifier.padding(horizontal = 8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) Color.Magenta else Color.Transparent,
-            contentColor = Color.Black
+            containerColor = if (isSelected) Color(0xff129575) else Color.Transparent,
+            contentColor = if (isSelected) Color.White else Color.Black
         ),
         border = BorderStroke(1.dp, Color.Black)
     ) {
@@ -235,7 +235,7 @@ fun CardRecipe(
             Text(
                 text = "${product.timeComplete} phút",
                 color = Color.White,
-                modifier = Modifier.width(65.dp)
+                modifier = Modifier.padding(end = 4.dp)
             )
         }
 

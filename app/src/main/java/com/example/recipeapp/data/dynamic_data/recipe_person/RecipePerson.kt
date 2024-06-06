@@ -13,8 +13,6 @@ data class RecipePerson(
     val nameRecipe: String,
     @ColumnInfo(name = "T_thgian")
     val time: String,
-//    @ColumnInfo(name = "T_nguyen_lieu")
-//    val ingredient: String,
     @ColumnInfo(name = "T_buoc_lam")
     val step: String,
 )
