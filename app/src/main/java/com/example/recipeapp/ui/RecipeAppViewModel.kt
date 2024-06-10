@@ -29,6 +29,7 @@ import com.example.recipeapp.ui.recipe_person.add_recipe.AddRecipeViewModel
 import com.example.recipeapp.ui.recipe_person.recipe_detail.RecipeDetailPerViewModel
 import com.example.recipeapp.ui.recipe_person.update_recipe.UpdateRecipeViewModel
 import com.example.recipeapp.ui.schedule.ScheduleViewModel
+import com.example.recipeapp.ui.schedule.findingForSchedule.FindForScheduleViewModel
 import com.example.recipeapp.ui.shoppingList.ShoppingListViewModel
 
 class RecipeAppViewModel : ViewModel() {
@@ -137,6 +138,10 @@ class RecipeAppViewModel : ViewModel() {
                 ScheduleViewModel(
                     recipeApplication().container.scheduleRepository
                 )
+            }
+
+            initializer {
+                FindForScheduleViewModel()
             }
         }
     }

@@ -1,11 +1,15 @@
 package com.example.recipeapp.ui.schedule.findingForSchedule
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,6 +35,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -59,9 +67,14 @@ object FindForScheduleDestination:NavigationDestination{
 @Composable
 fun FindForScheduleScreen(
     navToBack:()->Unit,
+    viewModel: FindForScheduleViewModel = viewModel(factory = RecipeAppViewModel.Factory),
     recipeAppViewModel:RecipeAppViewModel,
 ){
-    val list = Products().productList
+    var searchWord by remember {
+        mutableStateOf("")
+    }
+
+    val productList = viewModel.getListProduct(searchWord)
 
     Scaffold(
         topBar = {
@@ -91,11 +104,11 @@ fun FindForScheduleScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = searchWord,
+                onValueChange = {searchWord = it},
                 placeholder = { Text(text = "tìm kiếm công thức")},
                 keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Search
                 ),
                 trailingIcon = {
                    IconButton(onClick = { /*TODO*/ }) {
@@ -121,7 +134,7 @@ fun FindForScheduleScreen(
                 modifier = Modifier.padding(horizontal = 32.dp)
             ){
                 items(
-                    items = list
+                    items = productList
                 ){ product ->
                     ProductItem(
                         product = product,
@@ -140,54 +153,50 @@ fun ProductItem(
     navToBack:()->Unit,
     recipeAppViewModel: RecipeAppViewModel
 ) {
-    Box(modifier= Modifier
-        .fillMaxWidth()
-        .clickable {
-            recipeAppViewModel.updateIdProductSchedule(product.id)
-            navToBack()
-        }
+    Row(
+        modifier= Modifier
+            .fillMaxWidth()
+            .clickable {
+                recipeAppViewModel.updateIdProductSchedule(product.id)
+                navToBack()
+            }
+            .background(
+                color = colorResource(id = R.color.primaryColor).copy(alpha = 0.4f),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ){
         Image(painter = painterResource(id = product.image),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier= Modifier
-                .size(width = 1000.dp, height = 200.dp)
-                .clip(RoundedCornerShape(20.dp)))
-        Button(
-            shape = RoundedCornerShape(8.dp),
-            onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = Color.Black
-            ),
-            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp),
+                .size(width = 100.dp, height = 80.dp)
+                .clip(RoundedCornerShape(12.dp))
+        )
+        Column(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 10.dp, bottom = 10.dp)
+                .padding(start = 20.dp, bottom = 20.dp),
         ) {
-            Icon(Icons.Default.FavoriteBorder, contentDescription = null, Modifier.size(30.dp))
-        }
-        Column(modifier = Modifier
-            .align(Alignment.BottomStart)
-            .padding(start = 20.dp, bottom = 20.dp)) {
             Text(text = product.name,
                 fontWeight = FontWeight(weight = 1000),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.size(height = 50.dp, width = 220.dp))
+                )
             Text(text = product.category[0].name,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(0.3f))
+                    .alpha(0.3f)
+            )
         }
     }
     Spacer(modifier = Modifier.padding(top = 20.dp))
 }
 
-//@Preview(showSystemUi = true)
-//@Composable
-//fun PreviewFindForSchedule(){
-//    FindForScheduleScreen(
-//        navToBack = {},
-//    )
-//}
+@Preview(showSystemUi = true)
+@Composable
+fun PreviewFindForSchedule(){
+    FindForScheduleScreen(
+        navToBack = {},
+        recipeAppViewModel = viewModel(factory = RecipeAppViewModel.Factory)
+    )
+}

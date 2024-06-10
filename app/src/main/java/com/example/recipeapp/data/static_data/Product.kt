@@ -1393,6 +1393,12 @@ class Products{
         return productList[idProduct].name
     }
 
+    fun getProductsByName(text:String):List<Product>{
+        return productList.filter { product ->
+            product.name.contains(text, ignoreCase = true)
+        }
+    }
+
     fun getIngredient(idProduct:Int):List<Ingredient>{
         return productList[idProduct].ingredient
     }

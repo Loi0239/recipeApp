@@ -318,7 +318,7 @@ fun PickDateOfWeek(
         "FRIDAY" -> "thứ sáu"
         "SATURDAY" -> "thứ bảy"
         "SUNDAY" -> "chủ nhật"
-        else -> ""
+        else -> day
     }
 
     Column(

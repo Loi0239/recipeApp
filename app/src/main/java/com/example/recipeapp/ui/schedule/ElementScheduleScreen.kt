@@ -139,7 +139,7 @@ fun ScheduleBottomSheet(
             "FRIDAY" -> "thứ sáu"
             "SATURDAY" -> "thứ bảy"
             "SUNDAY" -> "chủ nhật"
-            else -> ""
+            else -> day
         }
 
         val date = selectedDate?.format(
@@ -368,6 +368,7 @@ fun ScheduleBottomSheet(
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
