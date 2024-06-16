@@ -61,7 +61,7 @@ fun AddRecipe(
     val onChangeValue = viewModel::updateUiState
     val coroutineScope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
-    val units = arrayOf("g", "kg", "l", "ml", "quả", "củ", "cây", "lá", "gói")
+    val units = arrayOf("g", "kg", "l", "ml", "con", "quả", "củ", "cây", "lá", "gói")
     var selectedUnit by remember { mutableStateOf(units[0]) }
     val context = LocalContext.current
 

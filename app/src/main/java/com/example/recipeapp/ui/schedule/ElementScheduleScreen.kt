@@ -51,9 +51,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.recipeapp.R
 import com.example.recipeapp.ui.RecipeAppViewModel
 import kotlinx.coroutines.launch
@@ -63,13 +65,14 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleDatePicker(
     state: DatePickerState,
     isOpen: Boolean,
-    confirmButtonText: String = "Ok",
-    dismissButtonText: String = "Cancel",
+    confirmButtonText: String = "Chọn",
+    dismissButtonText: String = "Hủy",
     onDismissRequest:()->Unit,
     onConfirmButtonClicked:()->Unit,
 ){
@@ -102,6 +105,7 @@ fun ScheduleDatePicker(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleBottomSheet(
@@ -152,11 +156,12 @@ fun ScheduleBottomSheet(
             dragHandle = {
                 Text(
                     text = bottomSheetTitle,
-                    style = MaterialTheme.typography.displaySmall,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    textAlign = TextAlign.Center
+                        .padding(vertical = 8.dp)
                 )
             }
         ) {
@@ -262,7 +267,7 @@ fun ScheduleBottomSheet(
                 OutlinedTextField(
                     value = note,
                     onValueChange = {onChangeNote(it)},
-                    placeholder = { Text(text = "ghi chú cho công thức") },
+                    placeholder = { Text(text = "Ghi chú cho công thức") },
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
                     ),
@@ -368,7 +373,7 @@ fun ScheduleBottomSheet(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.padding(bottom = 50.dp))
             }
         }
     }
@@ -378,16 +383,16 @@ fun ScheduleBottomSheet(
 @Composable
 fun ScheduleSelectMeal(
     isOpen: Boolean,
-    bottomSheetTitle:String = "lựa chọn bữa ăn",
+    bottomSheetTitle:String = "Lựa chọn bữa ăn",
     onDismissRequest: () -> Unit,
     onChangeMeal:(Color,String)->Unit,
 ){
     val listMeal = listOf(
-        Pair(Color.Red, "bữa sáng"),
-        Pair(Color.Yellow, "bữa trưa"),
-        Pair(Color.Green, "bữa xế"),
-        Pair(Color.Gray, "bữa chiều"),
-        Pair(Color.Blue, "bữa tối"),
+        Pair(Color.Red, "Bữa sáng"),
+        Pair(Color.Yellow, "Bữa trưa"),
+        Pair(Color.Green, "Bữa xế"),
+        Pair(Color.Gray, "Bữa chiều"),
+        Pair(Color.Blue, "Bữa tối"),
     )
 
     if(isOpen){
@@ -419,6 +424,7 @@ fun ScheduleSelectMeal(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+            Spacer(modifier = Modifier.padding(bottom = 50.dp))
         }
     }
 }
@@ -461,7 +467,7 @@ fun ScehduleSelectMealCard(
 @Composable
 fun SchedulePeople(
     isOpen: Boolean,
-    bottomSheetTitle:String = "lựa chọn số người",
+    bottomSheetTitle:String = "Lựa chọn số người",
     onDismissRequest: () -> Unit,
     onChangeIsOpen:()->Unit,
     onChangeNumberPeople:(Int)->Unit,
@@ -491,7 +497,7 @@ fun SchedulePeople(
                     onChangeNumberPeople = onChangeNumberPeople
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth()
@@ -508,14 +514,14 @@ fun SchedulePeople(
                         onClick = onChangeIsOpen
                     ) {
                         Text(
-                            text = "xác nhận",
+                            text = "Xác nhận",
                             style = MaterialTheme.typography.headlineLarge,
                             color = Color.White
                         )
                     }
                 }
             }
-
+            Spacer(modifier = Modifier.padding(bottom = 50.dp))
         }
     }
 }

@@ -7,6 +7,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun Long?.changeMillisToDateString():String{
     val date: LocalDate = this?.let {
         Instant
@@ -17,15 +18,18 @@ fun Long?.changeMillisToDateString():String{
     return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun Long.toLocalDate(): LocalDate {
     return Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun LocalDate.toLong(): Long {
     return atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun LocalDate.getWeekAround(): List<LocalDate> {
     val currentDate = LocalDate.now()
     return if(this.isAfter(currentDate.minusDays(1))){
@@ -37,6 +41,7 @@ fun LocalDate.getWeekAround(): List<LocalDate> {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 operator fun LocalDate.rangeTo(other: LocalDate) = generateSequence(this) { date ->
     if (date < other) date.plusDays(1) else null
 }.toList()

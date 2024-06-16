@@ -49,8 +49,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipeapp.R
 import com.example.recipeapp.data.static_data.Product
@@ -81,8 +83,10 @@ fun FindForScheduleScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "lịch trình & kế hoạch bữa ăn",
-                        style = MaterialTheme.typography.headlineLarge
+                        text = "Kế hoạch bữa ăn",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {
@@ -106,7 +110,7 @@ fun FindForScheduleScreen(
             OutlinedTextField(
                 value = searchWord,
                 onValueChange = {searchWord = it},
-                placeholder = { Text(text = "tìm kiếm công thức")},
+                placeholder = { Text(text = "Tìm kiếm công thức")},
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search
                 ),

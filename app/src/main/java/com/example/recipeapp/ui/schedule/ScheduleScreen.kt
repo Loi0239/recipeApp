@@ -1,6 +1,8 @@
 package com.example.recipeapp.ui.schedule
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,10 +55,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -76,6 +80,7 @@ object ScheduleDestination:NavigationDestination{
     override val route: String = "schedule"
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleScreen(
@@ -160,8 +165,10 @@ fun ScheduleScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "lịch trình & kế hoạch bữa ăn",
-                        style = MaterialTheme.typography.headlineLarge
+                        text = "Kế hoạch bữa ăn",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {
@@ -180,7 +187,7 @@ fun ScheduleScreen(
                             .background(colorResource(id = R.color.primaryColor)),
                         onClick = {
                             recipeAppViewModel.updateIdProductSchedule(-1)
-                            viewModel.updateMealValue("bữa sáng")
+                            viewModel.updateMealValue("Bữa sáng")
                             viewModel.updateColorMeal(Color.Red)
                             viewModel.updateNumberPeople(1)
                             viewModel.updateNote("")
@@ -203,11 +210,11 @@ fun ScheduleScreen(
             modifier = Modifier.padding(paddingValue)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(start = 15.dp, end = 15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Chọn ngày",
+                    text = "Chọn ngày:",
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Spacer(modifier = Modifier.width(16.dp))
@@ -369,6 +376,7 @@ fun PickDateOfWeek(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RecipeCard(
     schedule: Schedule,

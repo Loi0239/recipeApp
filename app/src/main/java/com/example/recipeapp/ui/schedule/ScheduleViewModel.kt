@@ -86,11 +86,11 @@ class ScheduleViewModel(
 
     fun getColorForPosition(position: String):Color{
         return when(position){
-            "bữa sáng" -> {Color.Red}
-            "bữa trưa" -> {Color.Yellow}
-            "bữa xế" -> {Color.Green}
-            "bữa chiều" -> {Color.Gray}
-            "bữa tối" -> {Color.Blue}
+            "Bữa sáng" -> {Color.Red}
+            "Bữa trưa" -> {Color.Yellow}
+            "Bữa xế" -> {Color.Green}
+            "Bữa chiều" -> {Color.Gray}
+            "Bữa tối" -> {Color.Blue}
             else -> {Color.Black}
         }
     }
